@@ -16,17 +16,21 @@ function initialiseUserData() {
 	
 	if (fs.existsSync(dataPath)) {
 		let decipher = crypto.createDecipher("aes-256-ctr", "c187a809b");
-		let encrypted = fs.readFileSync(dataPath);
+		let encrypted = fs.readFileSync(dataPath).toString();
 		let decrypted = decipher.update(encrypted, "hex", "utf8") + decipher.final("utf8");
-		data = JSON.parse(decrypted);
+		userData = JSON.parse(decrypted);
 	}
 	else {
 		userData = {
-			keepOpenInTray: true,
-			openInBackground: false,
-			startTimerOnStartup: false,
+			settings: {
+				startOnStartup : false,
+				keepOpenInTray: true,
+				openInBackground: false,
+				startTimerOnStartup: false,
+			},
 			selectedConnection: -1, // index of selected connection
-			jiraConnections: [] // { url:string, username:string, password:string }
+			connections: [] // { hostname, icon, username, password, history }
+				// history : { worklogId, startedAt, pausedDuration, endedAt, description }
 		};
 
 		saveUserData();
@@ -35,9 +39,15 @@ function initialiseUserData() {
 
 function saveUserData() {
 	let dataPath = path.join(electron.app.getPath("appData"), "JiraTimer", "userdata"); // do i need to put app name in user data file name?
+	console.log("User data path: " + dataPath);
 	let decrypted = JSON.stringify(userData);
 	let cipher = crypto.createCipher("aes-256-ctr", "c187a809b");
 	let encrypted = cipher.update(decrypted, "utf8", "hex") + cipher.final("hex");
+
+	if (!fs.existsSync(path.dirname(dataPath))) {
+		fs.mkdirSync(path.dirname(dataPath)); 
+	}
+
 	fs.writeFile(dataPath, encrypted, () => {}); // callback required but we don't have any use for it
 }
 
@@ -45,9 +55,7 @@ function createWindow() {
 	let window = new electron.BrowserWindow({ width: 1400, height: 750 });
 	window.loadFile("dist/index.html");
 	window.on("ready-to-show", () => {
-		mainWindow.webContents.send("userData", userData);
-
-		if (userData.openInBackground === false) {
+		if (userData.settings.openInBackground === false) {
 			mainWindow.show();
 		}
 	});
@@ -59,7 +67,7 @@ function createWindow() {
 			tray.destroy();
 			tray = null;
 		}
-		else if (userData.keepOpenInTray === true) {
+		else if (userData.settings.keepOpenInTray === true) {
 			mainWindow.hide();
 		}
 		else {
@@ -132,11 +140,6 @@ electron.app.on('before-quit', () => {
 	}
 });
 
-ipc.on("userData", (e, arg) => {
-	userData = arg;
-	saveUserData();
-});
-
 // todo: set different tray icons based on timer running/not running/paused
 ipc.on("timerStarted", () => {
 	tray.setToolTip("Keeping track of your time...");
@@ -158,5 +161,11 @@ ipc.on("timerEnded", () => {
 	tray.setImage("dist/assets/clock-outline.png");
 });
 
+ipc.on("userDataRequest", e => {
+	e.sender.send('userData', userData);
+});
 
-
+ipc.on("userData", (e, arg) => {
+	userData = arg;
+	saveUserData();
+});

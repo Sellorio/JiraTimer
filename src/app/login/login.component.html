@@ -1,0 +1,6 @@
+<div class="login-form">
+  <input type="text" class="hostname" maxlength="50" [(ngModel)]="hostname" placeholder="my-project.atlassian.net">
+  <input type="text" class="username" maxlength="50" [(ngModel)]="username" placeholder="username">
+  <input type="password" class="password" maxlength="50" [(ngModel)]="password" placeholder="password">
+  <button (click)="login()">Connect</button>
+</div>

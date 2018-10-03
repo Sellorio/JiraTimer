@@ -1,0 +1,51 @@
+.connection-tabs {
+    display: flex;
+    padding-top: 3px;
+    background: #99D;
+}
+
+.connection-tab {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 25%;
+    max-width: 300px;
+    border: 1px solid black;
+    border-bottom: 0;
+    border-radius: 10px 10px 0 0;
+    background: #CDF;
+    text-align: center;
+    overflow-x: hidden;
+    cursor: pointer;
+}
+
+.connection-tab:not(.new-connection) {
+    padding-left: 6px;
+}
+
+.connection-tab:first-child {
+    margin-left: 10px;
+}
+
+.connection-tab.selected {
+    background: #FFF;
+}
+
+.connection-tab.new-connection {
+    width: unset;
+}
+
+.tab-button {
+    background: none;
+    border: none;
+    margin: 0;
+    padding: 0 6px;
+    font-size: 1.5em;
+    opacity: 0.3;
+    cursor: pointer;
+    transition: opacity .3s;
+}
+
+.tab-button:hover {
+    opacity: 0.8;
+}

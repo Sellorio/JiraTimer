@@ -1,0 +1,10 @@
+<div class="connection-tabs">
+  <div *ngFor="let connection of viewModel.connections" class="connection-tab"
+       [class.selected]="viewModel.selectedConnection === connection" (click)="selectConnection(connection)">
+    {{connection.hostname}}
+    <button class="tab-button" (click)="deleteConnection(connection)">x</button>
+  </div>
+  <div *ngIf="viewModel.connections.length < 4" class="connection-tab new-connection" [class.selected]="viewModel.selectedConnection === null">
+    <button class="tab-button" (click)="goToNewConnectionTab()">+</button>
+  </div>
+</div>
