@@ -1,10 +1,18 @@
-import { ViewModel } from "./model/viewmodel";
-import { Settings } from "./model/settings";
-import { Connection } from "./model/connection";
-import { WorklogHistory } from "./model/worklog-history";
+import { Injectable } from '@angular/core';
+import { WorklogHistory } from './model/worklog-history';
+import { Connection } from './model/connection';
+import { ViewModel } from './model/viewmodel';
+import { Settings } from './model/settings';
+import { JiraService } from './jira.service';
 
-export class ModelConverter {
-    public static toModel(userData : any) : ViewModel {
+@Injectable({
+    providedIn: 'root'
+})
+export class ModelConverterService {
+    constructor(private _jiraService : JiraService) {
+    }
+
+    public toModel(userData : any) : ViewModel {
         let connections = this.connectionsToModel(userData.connections)
 
         return {
@@ -14,7 +22,7 @@ export class ModelConverter {
         };
     }
 
-    public static toUserData(model : ViewModel) : any {
+    public toUserData(model : ViewModel) : any {
         return {
             settings: this.settingsToData(model.settings),
             connections: this.connectionsToData(model.connections),
@@ -22,17 +30,17 @@ export class ModelConverter {
         }
     }
 
-    private static settingsToModel(settings : any) : Settings {
+    private settingsToModel(settings : any) : Settings {
         return settings;
     }
 
-    private static settingsToData(settings : Settings) : any {
+    private settingsToData(settings : Settings) : any {
         return settings;
     }
 
-    private static connectionsToModel(connections : any[]) : Connection[] {
+    private connectionsToModel(connections : any[]) : Connection[] {
         return connections.map(x => {
-            return {
+            let connection = {
                 hostname: x.hostname,
                 icon: x.icon,
                 username: x.username,
@@ -41,10 +49,15 @@ export class ModelConverter {
                 jirasAssignedToMe: null,
                 jirasRecentlyViewed: null
             };
+
+            this._jiraService.setupIssuesAssignedToMe(connection);
+            this._jiraService.setupIssuesRecentlyViewed(connection);
+
+            return connection;
         });
     }
 
-    private static connectionsToData(connections : Connection[]) : any {
+    private connectionsToData(connections : Connection[]) : any {
         return connections.map(x => {
             return {
                 hostname: x.hostname,
@@ -56,7 +69,7 @@ export class ModelConverter {
         });
     }
 
-    private static historyToModel(history : any[]) : WorklogHistory[] {
+    private historyToModel(history : any[]) : WorklogHistory[] {
         return history.map(x => {
             return {
                 worklogId: x.worklogId,
@@ -69,7 +82,7 @@ export class ModelConverter {
         });
     }
 
-    private static historyToData(history : WorklogHistory[]) : any {
+    private historyToData(history : WorklogHistory[]) : any {
         return history.map(x => {
             return {
                 worklogId: x.worklogId,

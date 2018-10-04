@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ViewModel } from '../model/viewmodel';
 import { Connection } from '../model/connection';
 import { ElectronService } from 'ngx-electron';
-import { ModelConverter } from '../model-converter';
+import { ModelConverterService } from '../model-converter.service';
 
 @Component({
   selector: 'app-connections',
@@ -12,7 +12,7 @@ import { ModelConverter } from '../model-converter';
 export class ConnectionsComponent implements OnInit {
   @Input() viewModel : ViewModel;
 
-  constructor(private _electron : ElectronService) {
+  constructor(private _electron : ElectronService, private modelConverterService : ModelConverterService) {
   }
 
   ngOnInit() {
@@ -24,7 +24,7 @@ export class ConnectionsComponent implements OnInit {
     }
 
     this.viewModel.connections.splice(this.viewModel.connections.indexOf(connection), 1);
-    this._electron.ipcRenderer.send("userData", ModelConverter.toUserData(this.viewModel));
+    this._electron.ipcRenderer.send("userData", this.modelConverterService.toUserData(this.viewModel));
   }
 
   public goToNewConnectionTab() : void {

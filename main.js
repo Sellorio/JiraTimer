@@ -169,3 +169,7 @@ ipc.on("userData", (e, arg) => {
 	userData = arg;
 	saveUserData();
 });
+
+ipc.on("openUrl", (_, url) => {
+	electron.shell.openExternal(url);
+});

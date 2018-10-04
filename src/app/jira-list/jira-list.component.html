@@ -1,0 +1,11 @@
+<ul class="jira-list">
+  <li class="message" *ngIf="!list">Loading...</li>
+  <li class="message" *ngIf="list && list.length === 0">No Jiras to show.</li>
+  <li *ngFor="let jira of list">
+    <div class="jira-key"
+         [class.enabled]="currentTimer"
+         [class.active]="getIsActive(jira)"
+         (click)="toggleJiraInTimer(jira)">{{jira.key}}</div>
+    <div class="jira-summary" (click)="openJiraInBrowser(jira)">{{jira.summary}}</div>
+  </li>
+</ul>

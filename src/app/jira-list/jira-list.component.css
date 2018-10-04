@@ -1,0 +1,41 @@
+.jira-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.jira-list li {
+    display: flex;
+    border-bottom: 1px solid #DDD;
+    font-size: 0.9em;
+}
+
+.jira-key {
+    padding: 1px 1px 1px 3px;
+    width: 110px;
+    border-right: 1px solid #EEE;
+    background: #F6F6F6;
+    white-space: nowrap;                   
+    overflow: hidden;  
+    text-overflow: ellipsis;
+    direction:rtl;
+    text-align:left;
+    cursor: default;
+}
+
+.jira-key.active {
+    background: #AEA;
+}
+
+.jira-summary {
+    padding: 1px 2px 1px 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+}
+
+.jira-summary:hover {
+    text-decoration: underline;
+}
