@@ -1,0 +1,25 @@
+<div class="timer" [class.selected]="viewModel.selectedTimer === timer" (click)="selectTimer()">
+  <div class="details">
+    <div class="times">
+      <input class="started-at" type="text" [(ngModel)]="formattedStartTime" (change)="startTimeChanged()" maxlength="9">
+      <div class="current-duration">{{timer.currentDuration}}</div>
+    </div>
+    <textarea class="description autoExpand" [(ngModel)]="timer.description" maxlength="300" [placeholder]="randomisedDescriptionPlaceholder" data-min-rows="1" rows="1"></textarea>
+    <ul class="jiras-in-timer">
+      <li *ngFor="let jira of timer.jiras" title="{{jira.summary}}">
+        <span (click)="openJiraInBrowser(jira)">{{jira.key}}</span>
+        <button class="remove-jira" (click)="removeJira(jira)">✖</button>
+      </li>
+      <li>
+          <input class="jira-key" type="text" maxlength="20" [(ngModel)]="manualJiraKey" (keyup.enter)="addManualJiraToTimer()">
+          <button class="add-jira-key" (click)="addManualJiraToTimer()">+</button>
+      </li>
+    </ul>
+  </div>
+  <div class="controls">
+    <button *ngIf="timer.pauseStartedAt !== null" class="play" (click)="resumeTimer()">▶</button>
+    <button *ngIf="timer.pauseStartedAt === null" class="pause" (click)="pauseTimer()">❚❚</button>
+    <button class="submit" (click)="submitTimer()">✔</button>
+    <button class="cancel" (click)="stopTimer()">✖</button>
+  </div>
+</div>

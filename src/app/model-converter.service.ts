@@ -18,7 +18,9 @@ export class ModelConverterService {
         return {
             settings: this.settingsToModel(userData.settings),
             connections: connections,
-            selectedConnection: userData.selectedConnection === -1 ? null : connections[userData.selectedConnection]
+            selectedConnection: userData.selectedConnection === -1 ? null : connections[userData.selectedConnection],
+            timers: [],
+            selectedTimer: null
         };
     }
 
@@ -72,7 +74,7 @@ export class ModelConverterService {
     private historyToModel(history : any[]) : WorklogHistory[] {
         return history.map(x => {
             return {
-                worklogId: x.worklogId,
+                worklogIds: x.worklogIds,
                 startedAt: x.startedAt,
                 pausedDuration: x.pausedDuration,
                 endedAt: x.endedAt,
@@ -85,7 +87,7 @@ export class ModelConverterService {
     private historyToData(history : WorklogHistory[]) : any {
         return history.map(x => {
             return {
-                worklogId: x.worklogId,
+                worklogIds: x.worklogIds,
                 startedAt: x.startedAt,
                 pausedDuration: x.pausedDuration,
                 endedAt: x.endedAt,

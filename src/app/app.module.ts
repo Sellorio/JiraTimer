@@ -8,13 +8,17 @@ import { AppComponent } from './app.component';
 import { ConnectionsComponent } from './connections/connections.component';
 import { LoginComponent } from './login/login.component';
 import { JiraListComponent } from './jira-list/jira-list.component';
+import { TimersComponent } from './timers/timers.component';
+import { TimerComponent } from './timer/timer.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ConnectionsComponent,
     LoginComponent,
-    JiraListComponent
+    JiraListComponent,
+    TimersComponent,
+    TimerComponent
   ],
   imports: [
     BrowserModule,

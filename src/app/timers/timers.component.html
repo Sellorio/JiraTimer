@@ -1,0 +1,7 @@
+<ul class="timers">
+  <li class="total-today">{{totalTimeToday}}</li>
+  <li *ngFor="let timer of viewModel.timers">
+    <app-timer [viewModel]="viewModel" [timer]="timer"></app-timer>
+  </li>
+  <li><button class="start-timer" (click)="startTimer()">Start Timer</button></li>
+</ul>

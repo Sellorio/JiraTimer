@@ -1,5 +1,5 @@
 export class WorklogHistory {
-    worklogId : number;
+    worklogIds : number[];
     startedAt : Date;
     pausedDuration : number; // in seconds
     endedAt : Date;

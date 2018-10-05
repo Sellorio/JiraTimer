@@ -2,7 +2,6 @@ import { Component, NgZone } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
 import { ViewModel } from './model/viewmodel';
 import { ModelConverterService } from './model-converter.service';
-import { Timer } from './model/timer';
 import { JiraService } from './jira.service';
 
 @Component({
@@ -13,7 +12,7 @@ import { JiraService } from './jira.service';
 export class AppComponent {
   title = 'Jira Timer';
   viewModel : ViewModel = null;
-  currentTimer : Timer = null;
+  totalTimeToday : string = "00:00:00";
 
   constructor(zone : NgZone, electronService : ElectronService, modelConverterService : ModelConverterService, private _jiraService : JiraService) {
     electronService.ipcRenderer.once("userData", (_, userData) => {

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Connection } from './model/connection';
+import { Jira } from './model/jira';
 
 @Injectable({
     providedIn: 'root'
@@ -43,8 +44,44 @@ export class JiraService {
             });
     }
 
-    public validateConnection(connection : Connection, onPass : () => void, onFail : (error : string) => void) {
+    public validateConnection(connection : Connection, onPass : () => void, onFail : (error : string) => void) : void {
         this.get(connection, "myself", onPass, onFail);
+    }
+
+    public validateJiraKey(connection : Connection, jiraKey : string, onPass : (summary : string) => void, onFail : () => void) : void {
+        this.get(connection, "issue/" + jiraKey + "?fields=summary", jira => onPass(jira.fields.summary), onFail);
+    }
+
+    public submitWorklog(connection : Connection, jiras : Jira[], startedAt : Date, duration : number, comment : string, onComplete : (worklogIds : number[]) => void) : void {
+        let worklogIds = [];
+
+        for (let i = 0; i < jiras.length; i++) {
+            let jiraKey = jiras[i].key;
+
+            this.post(
+                connection,
+                "issue/" + jiraKey + "/worklog",
+                {
+                    comment: comment,
+                    started: startedAt.toISOString().replace("Z", "+0000"),
+                    timeSpent: Math.ceil(duration / jiras.length / 60.0).toString() + "m"
+                },
+                worklog => {
+                    worklogIds.push(parseInt(worklog.id));
+
+                    if (worklogIds.length == jiras.length) {
+                        onComplete(worklogIds);
+                    }
+                },
+                error => {
+                    alert("Failed to submit worklog for " + jiraKey + ": " + error);
+                    worklogIds.push(0);
+
+                    if (worklogIds.length === jiras.length) {
+                        onComplete(worklogIds);
+                    }
+                });
+        }
     }
 
     private get(connection : Connection, apiAction : string, callback? : (response : any) => void, onFail? : (error : string) => void) : void {
@@ -76,13 +113,15 @@ export class JiraService {
         }
 
         if (onFail) {
-            promise.catch(x => onFail(x.message));
+            promise.catch(x => onFail(x.error.message));
         }
     }
 
     private getHttpOptions(connection : Connection) : any {
         return {
-            headers: { Authorization: "Basic " + btoa(connection.username + ":" + connection.password) }
+            headers: {
+                Authorization: "Basic " + btoa(connection.username + ":" + connection.password),
+            }
         };
     }
 }

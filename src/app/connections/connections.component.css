@@ -40,10 +40,14 @@
     border: none;
     margin: 0;
     padding: 0 6px;
-    font-size: 1.5em;
+    font-size: 1.1em;
     opacity: 0.3;
     cursor: pointer;
     transition: opacity .3s;
+}
+
+.connection-tab.new-connection .tab-button {
+    font-size: 1.5em;
 }
 
 .tab-button:hover {

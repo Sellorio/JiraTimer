@@ -1,0 +1,129 @@
+.timer {
+    display: flex;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-top: 1px solid #DDD;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 1.3em;
+}
+
+.details {
+    flex-grow: 1;
+}
+
+.times {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.times input {
+    padding: 2px 4px;
+    border: 1px solid #ABF;
+    font-size: 1em;
+}
+
+.details textarea {
+    margin-top: 2px;
+    width: 100%;
+    padding: 2px 3px;
+    border: 1px solid #ABF;
+    font-size: 1.2em;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.jiras-in-timer {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+    margin-top: -6px;
+    margin-left: -3px;
+    padding: 0;
+    list-style: none;
+    font-size: 0.9em;
+}
+
+.jiras-in-timer li {
+    display: flex;
+    align-items: center;
+    margin-top: 3px;
+    margin-left: 3px;
+    padding: 3px;
+    border-radius: 4px;
+    background: #33F;
+    font-weight: 400;
+    font-size: 0.7em;
+    color: #DDF;
+    cursor: pointer;
+}
+
+.jiras-in-timer li:last-child {
+    cursor: default;
+}
+
+.jiras-in-timer li button {
+    margin-left: 5px;
+    padding: 0 3px;
+    border: 0;
+    background: none;
+    color: #DDF;
+    cursor: pointer;
+}
+
+.jira-key {
+    margin: 1px;
+    padding: 2px 4px;
+    width: 100px;
+    border: 0;
+    background: rgba(255,255,255,0.5);
+}
+
+.add-jira-key {
+    font-size: 1.2em;
+}
+
+.controls {
+    margin-left: 10px;
+    width: 30px;
+}
+
+.controls button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: -2px;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    border: 0;
+    background: #00F;
+    color: white;
+    cursor: pointer;
+}
+
+.controls button {
+    margin-top: 3px;
+}
+
+.controls button:hover {
+    background: #55F;
+}
+
+.controls button.submit {
+    background: #0B0;
+    margin-top: 1px;
+}
+
+.controls button.submit:hover {
+    background: #5D5;
+}
+
+.controls button.cancel {
+    background: #C00;
+    margin-top: 1px;
+}
+
+.controls button.cancel:hover {
+    background: #E55;
+}

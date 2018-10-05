@@ -10,7 +10,7 @@ import { Connection } from '../model/connection';
   styleUrls: ['./jira-list.component.css']
 })
 export class JiraListComponent implements OnInit {
-  @Input() currentTimer : Timer;
+  @Input() selectedTimer : Timer;
   @Input() list : Jira[];
   @Input() selectedConnection : Connection;
 
@@ -20,11 +20,25 @@ export class JiraListComponent implements OnInit {
   }
 
   public getIsActive(jira) : boolean {
-    return this.currentTimer && this.currentTimer.jiras.some(x => x.key === jira.key);
+    return this.selectedTimer && this.selectedTimer.connection === this.selectedConnection && this.selectedTimer.jiras.some(x => x.key === jira.key);
   }
 
   public toggleJiraInTimer(jira) : void {
-    throw new Error("not implemented");
+    if (this.selectedTimer) {
+      if (this.selectedTimer.connection === this.selectedConnection) {
+        let indexOfJira = this.selectedTimer.jiras.indexOf(jira);
+
+        if (indexOfJira === -1) {
+          this.selectedTimer.jiras.push(jira);
+        }
+        else {
+          this.selectedTimer.jiras.splice(indexOfJira, 1);
+        }
+      }
+      else {
+        alert("This timer is for another connection.");
+      }
+    }
   }
 
   public openJiraInBrowser(jira) : void {

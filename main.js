@@ -30,7 +30,7 @@ function initialiseUserData() {
 			},
 			selectedConnection: -1, // index of selected connection
 			connections: [] // { hostname, icon, username, password, history }
-				// history : { worklogId, startedAt, pausedDuration, endedAt, description }
+				// history : { worklogIds, startedAt, pausedDuration, endedAt, description }
 		};
 
 		saveUserData();
@@ -52,8 +52,15 @@ function saveUserData() {
 }
 
 function createWindow() {
-	let window = new electron.BrowserWindow({ width: 1400, height: 750 });
+	let window =
+		new electron.BrowserWindow({
+			width: 1400,
+			height: 750,
+		});
+
+	window.webContents.setUserAgent("Mozilla/5.0 (Windows NT 6.3; Win64; x64; AppleWebKit-537.36; Chrome-45.0.2454.85; Electron-0.34.2; Safari-537.36) like Gecko");
 	window.loadFile("dist/index.html");
+	
 	window.on("ready-to-show", () => {
 		if (userData.settings.openInBackground === false) {
 			mainWindow.show();

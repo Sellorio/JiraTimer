@@ -2,18 +2,26 @@
   <app-connections [viewModel]="viewModel"></app-connections>
   <app-login *ngIf="viewModel.selectedConnection === null" [viewModel]="viewModel"></app-login>
   <div *ngIf="viewModel.selectedConnection !== null" style="display:flex">
-    <div style="width:50%;border-right:1px solid #CCC"></div>
+    <div style="width:50%;border-right:1px solid #CCC">
+      <app-timers [viewModel]="viewModel"></app-timers>
+    </div>
     <div style="width:50%;height:calc(100vh - 32px);overflow-y:auto">
       <div class="jira-list-header">
         <div class="heading">Assigned To Me</div>
         <button class="refresh-jira-list" (click)="refreshJirasAssignedToMe()">⟲</button>
       </div>
-      <app-jira-list [currentTimer]="currentTimer" [list]="viewModel.selectedConnection.jirasAssignedToMe" [selectedConnection]="viewModel.selectedConnection"></app-jira-list>
+      <app-jira-list [selectedTimer]="viewModel.selectedTimer"
+                     [list]="viewModel.selectedConnection.jirasAssignedToMe"
+                     [selectedConnection]="viewModel.selectedConnection">
+      </app-jira-list>
       <div class="jira-list-header">
         <div class="heading">Recently Viewed</div>
         <button class="refresh-jira-list" (click)="refreshJirasRecentlyViewed()">⟲</button>
       </div>
-      <app-jira-list [currentTimer]="currentTimer" [list]="viewModel.selectedConnection.jirasRecentlyViewed" [selectedConnection]="viewModel.selectedConnection"></app-jira-list>
+      <app-jira-list [selectedTimer]="viewModel.selectedTimer"
+                     [list]="viewModel.selectedConnection.jirasRecentlyViewed"
+                     [selectedConnection]="viewModel.selectedConnection">
+      </app-jira-list>
     </div>
   </div>
 </div>

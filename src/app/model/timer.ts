@@ -8,6 +8,5 @@ export class Timer {
     pauseStartedAt : Date;
     description : string;
     jiras : Jira[];
-
-    manualJiraKeyEntry : string; // used for immediate user input only
+    currentDuration : string;
 }
