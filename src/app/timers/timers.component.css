@@ -18,3 +18,22 @@
     font-weight: 400;
     opacity: 0.4;
 }
+
+.timers li:last-child {
+    text-align: right;
+}
+
+.timers li:not([class]) + li:last-child {
+    margin-top: -10px;
+}
+
+.start-timer {
+    margin: 10px;
+    padding: 4px 8px;
+    border: 0;
+    background: #080;
+    color: white;
+    font-size: 1.1em;
+    font-weight: 400;
+    cursor: pointer;
+}

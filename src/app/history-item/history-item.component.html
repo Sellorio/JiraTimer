@@ -1,0 +1,12 @@
+<div class="times">
+  <input type="text" class="started-at" maxlength="9" [(ngModel)]="startedAt" (change)="itemEdited()" [readonly]="item.worklogIds === null">
+  <input type="text" class="duration" maxlength="9" [(ngModel)]="duration" (change)="itemEdited()" [readonly]="item.worklogIds === null">
+  <input type="text" class="ended-at" maxlength="9" [(ngModel)]="endedAt" (change)="itemEdited()" [readonly]="item.worklogIds === null">
+</div>
+<textarea class="description" rows="1" [(ngModel)]="description" (change)="itemEdited()" [readonly]="item.worklogIds === null"></textarea>
+<ul class="jiras">
+  <li *ngFor="let jira of item.jiras" title="{{jira.summary}}">
+    <span (click)="openJiraInBrowser(jira)">{{jira.key}}</span>
+  </li>
+</ul>
+<button class="delete" (click)="deleteItem()" [disabled]="item.worklogIds === null">✖</button>

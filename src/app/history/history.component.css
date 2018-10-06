@@ -1,0 +1,33 @@
+.history-group-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.history-group-list .history-group-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 2px 8px;
+    background: #666;
+    color: #DDD;
+}
+
+.history-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.history-list > li {
+    position: relative;
+    padding: 10px;
+    background: #EAFFEA;
+}
+
+.history-list > li:nth-child(2n + 1) {
+    background: #EAFAFF;
+}
+
+.history-list > li.inserting {
+    opacity: 0.5;
+}

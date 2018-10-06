@@ -84,6 +84,29 @@ export class JiraService {
         }
     }
 
+    public updateWorklog(connection : Connection, jiras : Jira[], worklogIds : number[], startedAt : Date, duration : number, comment : string) : void {
+        for (let i = 0; i < jiras.length; i++) {
+            if (worklogIds[i] !== 0) {
+                this.put(
+                    connection,
+                    "issue/" + jiras[i].key + "/worklog/" + worklogIds[i],
+                    {
+                        comment: comment,
+                        started: startedAt.toISOString().replace("Z", "+0000"),
+                        timeSpent: Math.ceil(duration / jiras.length / 60.0).toString() + "m"
+                    });
+            }
+        }
+    }
+
+    public deleteWorklog(connection : Connection, jiras : Jira[], worklogIds : number[]) : void {
+        for (let i = 0; i < jiras.length; i++) {
+            if (worklogIds[i] !== 0) {
+                this.delete(connection, "issue/" + jiras[i].key + "/worklog/" + worklogIds[i]);
+            }
+        }
+    }
+
     private get(connection : Connection, apiAction : string, callback? : (response : any) => void, onFail? : (error : string) => void) : void {
         let promise =
             this.http.get(
@@ -114,6 +137,39 @@ export class JiraService {
 
         if (onFail) {
             promise.catch(x => onFail(x.error.message));
+        }
+    }
+
+    private put(connection : Connection, apiAction : string, input : any, callback? : (response : any) => void, onFail? : (error : string) => void) : void {
+        let promise =
+            this.http.put(
+                "https://" + connection.hostname + "/rest/api/2/" + apiAction,
+                input,
+                this.getHttpOptions(connection))
+                    .toPromise();
+
+        if (callback) {
+            promise.then(callback);
+        }
+
+        if (onFail) {
+            promise.catch(x => onFail(x.error.message));
+        }
+    }
+
+    private delete(connection : Connection, apiAction : string, callback? : (response : any) => void, onFail? : (error : string) => void) : void {
+        let promise =
+            this.http.delete(
+                "https://" + connection.hostname + "/rest/api/2/" + apiAction,
+                this.getHttpOptions(connection))
+                    .toPromise();
+
+        if (callback) {
+            promise.then(callback);
+        }
+
+        if (onFail) {
+            promise.catch(x => onFail(x.message));
         }
     }
 

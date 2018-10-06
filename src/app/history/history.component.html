@@ -1,0 +1,13 @@
+<ol class="history-group-list">
+  <li *ngFor="let group of getGroupedHistoryItems()">
+    <div class="history-group-header">
+      <div class="date">{{group.date.toDateString()}}</div>
+      <div class="total-duration">{{group.totalDuration}}</div>
+    </div>
+    <ol class="history-list">
+      <li *ngFor="let history of group.items" [class.inserting]="history.worklogIds === null">
+        <app-history-item [viewModel]="viewModel" [connection]="connection" [item]="history"></app-history-item>
+      </li>
+    </ol>
+  </li>
+</ol>

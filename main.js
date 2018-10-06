@@ -1,3 +1,5 @@
+// package command: electron-packager ./ "Jira Timer" --all --icon "./src/assets/icon.hqx"
+
 const electron = require("electron")
 const fs = require("fs")
 const os = require("os")
@@ -19,6 +21,11 @@ function initialiseUserData() {
 		let encrypted = fs.readFileSync(dataPath).toString();
 		let decrypted = decipher.update(encrypted, "hex", "utf8") + decipher.final("utf8");
 		userData = JSON.parse(decrypted);
+
+		electron.app.setLoginItemSettings({
+			openAtLogin: userData.settings.startOnStartup,
+			path: electron.app.getPath("exe")
+		});
 	}
 	else {
 		userData = {
@@ -30,7 +37,7 @@ function initialiseUserData() {
 			},
 			selectedConnection: -1, // index of selected connection
 			connections: [] // { hostname, icon, username, password, history }
-				// history : { worklogIds, startedAt, pausedDuration, endedAt, description }
+				// history : { worklogIds, jiras, startedAt, pausedDuration, endedAt, description }
 		};
 
 		saveUserData();
@@ -60,6 +67,7 @@ function createWindow() {
 
 	window.webContents.setUserAgent("Mozilla/5.0 (Windows NT 6.3; Win64; x64; AppleWebKit-537.36; Chrome-45.0.2454.85; Electron-0.34.2; Safari-537.36) like Gecko");
 	window.loadFile("dist/index.html");
+	window.setIcon("dist/assets/icon.jpg");
 	
 	window.on("ready-to-show", () => {
 		if (userData.settings.openInBackground === false) {
@@ -85,7 +93,7 @@ function createWindow() {
 }
 
 function createTray() {
-	tray = new electron.Tray("dist/assets/clock-outline.png");
+	tray = new electron.Tray("dist/assets/icon-stop.png");
 	tray.setToolTip("Timer is stopped."); // if timer is active "Keeping track of your time..." else "Timer is stopped."
 
 	let contextMenu = new electron.Menu();
@@ -100,7 +108,7 @@ function createTray() {
 	}));
 	tray.setContextMenu(contextMenu);
 	
-	tray.on("double-click", () => mainWindow.show());
+	tray.on("click", () => mainWindow.show());
 }
 
 function handleCloseRequest() {
@@ -147,25 +155,21 @@ electron.app.on('before-quit', () => {
 	}
 });
 
-// todo: set different tray icons based on timer running/not running/paused
-ipc.on("timerStarted", () => {
-	tray.setToolTip("Keeping track of your time...");
-	tray.setImage("dist/assets/clock-fill.png");
-});
-
-ipc.on("timerPaused", () => {
-	tray.setToolTip("Timer is paused.");
-	tray.setImage("dist/assets/clock-outline.png");
-});
-
-ipc.on("timerResumed", () => {
-	tray.setToolTip("Keeping track of your time...");
-	tray.setImage("dist/assets/clock-fill.png");
-});
-
-ipc.on("timerEnded", () => {
-	tray.setToolTip("Timer is stopped.");
-	tray.setImage("dist/assets/clock-outline.png");
+ipc.on("timerState", (_, state) => {
+	switch (state) {
+		case "running":
+			tray.setToolTip("Keeping track of your time...");
+			tray.setImage("dist/assets/icon-play.png");
+			break;
+		case "stopped":
+			tray.setToolTip("Timer is stopped.");
+			tray.setImage("dist/assets/icon-stop.png");
+			break;
+		case "paused":
+			tray.setToolTip("Timer is paused.");
+			tray.setImage("dist/assets/icon-pause.png");
+			break;
+	}
 });
 
 ipc.on("userDataRequest", e => {

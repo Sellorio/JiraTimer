@@ -9,4 +9,5 @@ export class Connection {
     history : WorklogHistory[];
     jirasAssignedToMe : Jira[];
     jirasRecentlyViewed : Jira[];
+    historyChanged : boolean;
 }

@@ -5,6 +5,8 @@ import { JiraService } from '../jira.service';
 import { Jira } from '../model/jira';
 import { WorklogHistory } from '../model/worklog-history';
 import { ElectronService } from 'ngx-electron';
+import { TimeSpan } from '../time-span';
+import { ModelConverterService } from '../model-converter.service';
 
 const RandomPlaceholders = [
   "Accidentally googled cat photos",
@@ -41,61 +43,34 @@ export class TimerComponent implements OnInit {
   formattedStartTime : string;
   randomisedDescriptionPlaceholder : string;
 
-  constructor(private _jiraService : JiraService, private _electronService : ElectronService) { }
+  constructor(private _jiraService : JiraService, private _electronService : ElectronService, private _modelConverterService : ModelConverterService) { }
 
   ngOnInit() {
     this.randomisedDescriptionPlaceholder = RandomPlaceholders[Math.floor(Math.random() * RandomPlaceholders.length)];
-    this.setFormattedStartTime();
+    this.formattedStartTime = TimeSpan.fromDate(this.timer.startedAt).toString();
   }
 
   public selectTimer() : void {
     this.viewModel.selectedTimer = this.timer;
   }
 
-  public setFormattedStartTime() : void {
-    let hours = this.timer.startedAt.getHours();
-    let minutes = this.timer.startedAt.getMinutes();
-    let seconds = this.timer.startedAt.getSeconds();
-
-    this.formattedStartTime =
-      (hours > 9 ? hours.toString() : "0" + hours.toString())
-      + ":"
-      + (minutes > 9 ? minutes.toString() : "0" + minutes.toString())
-      + ":"
-      + (seconds > 9 ? seconds.toString() : "0" + seconds.toString());
-  }
-
   public startTimeChanged() : void {
-    let match = /^([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})$/.exec(this.formattedStartTime);
+    let timeSpan : TimeSpan;
 
-    if (match === null) {
-      alert("Invalid time format. Please pass in as hours:minutes:seconds.");
-      return;
+    try
+    {
+      timeSpan = TimeSpan.parse(this.formattedStartTime);
     }
-
-    let hours = parseInt(match[1]);
-    let minutes = parseInt(match[2]);
-    let seconds = parseInt(match[3]);
-
-    if (hours > 23) {
-      alert("Invalid time. Hours cannot be greater than 23.");
-      return;
-    }
-    
-    if (minutes > 59) {
-      alert("Invalid time. Minutes cannot be greater than 59.");
-      return;
-    }
-    
-    if (seconds > 59) {
-      alert("Invalid time. Seconds cannot be greater than 59.");
+    catch (err) {
+      alert(err);
       return;
     }
 
     let newTime = new Date(this.timer.startedAt.getTime());
-    newTime.setHours(hours);
-    newTime.setMinutes(minutes);
-    newTime.setSeconds(seconds);
+    newTime.setHours(timeSpan.hours);
+    newTime.setMinutes(timeSpan.minutes);
+    newTime.setSeconds(timeSpan.seconds);
+    newTime.setMilliseconds(0);
 
     let currentPausedDuration =
       this.timer.pauseStartedAt === null
@@ -166,12 +141,22 @@ export class TimerComponent implements OnInit {
     if (this.timer.pauseStartedAt !== null) {
       this.timer.pausedDuration += (Date.now() - this.timer.pauseStartedAt.getTime()) / 1000;
       this.timer.pauseStartedAt = null;
+      this._electronService.ipcRenderer.send("timerState", "running");
     }
   }
 
   public pauseTimer() : void {
     if (this.timer.pauseStartedAt === null) {
       this.timer.pauseStartedAt = new Date();
+
+      for (let i = 0; i < this.viewModel.timers.length; i++) {
+        if (this.viewModel.timers[i].pauseStartedAt === null) {
+          return;
+        }
+      }
+      
+      // if all timers are paused then update state to paused
+      this._electronService.ipcRenderer.send("timerState", "paused");
     }
   }
 
@@ -179,6 +164,7 @@ export class TimerComponent implements OnInit {
     this.resumeTimer();
 
     let now = new Date();
+    now.setMilliseconds(0);
     let duration = (now.getTime() - this.timer.startedAt.getTime()) / 1000 - this.timer.pausedDuration;
 
     let history : WorklogHistory = {
@@ -187,15 +173,25 @@ export class TimerComponent implements OnInit {
       isInEditMode: false,
       pausedDuration: this.timer.pausedDuration,
       startedAt: this.timer.startedAt,
-      worklogIds: null
+      worklogIds: null,
+      jiras: this.timer.jiras
     };
 
     this.timer.connection.history.unshift(history);
+    this.timer.connection.history.sort((a, b) => a.startedAt.getTime() - b.startedAt.getTime());
+    this.timer.connection.historyChanged = true;
     this.stopTimer();
 
-    this._jiraService.submitWorklog(this.timer.connection, this.timer.jiras, this.timer.startedAt, duration, this.timer.description, worklogIds => {
-      history.worklogIds = worklogIds;
-    });
+    if (this.timer.jiras.length !== 0) {
+      this._jiraService.submitWorklog(this.timer.connection, this.timer.jiras, this.timer.startedAt, duration, this.timer.description, worklogIds => {
+        history.worklogIds = worklogIds;
+        this._electronService.ipcRenderer.send("userData", this._modelConverterService.toUserData(this.viewModel));
+      });
+    }
+    else {
+      history.worklogIds = [];
+      this._electronService.ipcRenderer.send("userData", this._modelConverterService.toUserData(this.viewModel));
+    }
   }
 
   public stopTimer() : void {
@@ -203,6 +199,19 @@ export class TimerComponent implements OnInit {
 
     if (timerIndex !== -1) {
       this.viewModel.timers.splice(timerIndex, 1);
+
+      let timerState = "stopped";
+
+      for (let i = 0; i < this.viewModel.timers.length; i++) {
+        if (this.viewModel.timers[i].pauseStartedAt === null) {
+          return; // timer state is still running
+        }
+        else {
+          timerState = "paused";
+        }
+      }
+
+      this._electronService.ipcRenderer.send("timerState", timerState);
 
       if (this.viewModel.selectedTimer === this.timer) {
         this.viewModel.selectedTimer = this.viewModel.timers.length !== 0 ? this.viewModel.timers[0] : null;

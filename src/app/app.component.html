@@ -4,6 +4,7 @@
   <div *ngIf="viewModel.selectedConnection !== null" style="display:flex">
     <div style="width:50%;border-right:1px solid #CCC">
       <app-timers [viewModel]="viewModel"></app-timers>
+      <app-history [viewModel]="viewModel" [connection]="viewModel.selectedConnection"></app-history>
     </div>
     <div style="width:50%;height:calc(100vh - 32px);overflow-y:auto">
       <div class="jira-list-header">

@@ -10,6 +10,8 @@ import { LoginComponent } from './login/login.component';
 import { JiraListComponent } from './jira-list/jira-list.component';
 import { TimersComponent } from './timers/timers.component';
 import { TimerComponent } from './timer/timer.component';
+import { HistoryComponent } from './history/history.component';
+import { HistoryItemComponent } from './history-item/history-item.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +20,9 @@ import { TimerComponent } from './timer/timer.component';
     LoginComponent,
     JiraListComponent,
     TimersComponent,
-    TimerComponent
+    TimerComponent,
+    HistoryComponent,
+    HistoryItemComponent
   ],
   imports: [
     BrowserModule,

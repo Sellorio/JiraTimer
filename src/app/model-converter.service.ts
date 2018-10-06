@@ -49,7 +49,8 @@ export class ModelConverterService {
                 password: x.password,
                 history: this.historyToModel(x.history),
                 jirasAssignedToMe: null,
-                jirasRecentlyViewed: null
+                jirasRecentlyViewed: null,
+                historyChanged: true
             };
 
             this._jiraService.setupIssuesAssignedToMe(connection);
@@ -74,6 +75,7 @@ export class ModelConverterService {
     private historyToModel(history : any[]) : WorklogHistory[] {
         return history.map(x => {
             return {
+                jiras: x.jiras,
                 worklogIds: x.worklogIds,
                 startedAt: x.startedAt,
                 pausedDuration: x.pausedDuration,
@@ -87,6 +89,7 @@ export class ModelConverterService {
     private historyToData(history : WorklogHistory[]) : any {
         return history.map(x => {
             return {
+                jiras: x.jiras,
                 worklogIds: x.worklogIds,
                 startedAt: x.startedAt,
                 pausedDuration: x.pausedDuration,

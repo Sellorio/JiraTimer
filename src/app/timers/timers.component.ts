@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ViewModel } from '../model/viewmodel';
 import { Timer } from '../model/timer';
 import { ElectronService } from 'ngx-electron';
+import { TimeSpan } from '../time-span';
 
 @Component({
   selector: 'app-timers',
@@ -13,7 +14,7 @@ export class TimersComponent implements OnInit {
   totalTimeToday : string = "00:00:00";
   timerUpdatedToSecond : number = 0;
 
-  constructor() { }
+  constructor(private _electronService : ElectronService) { }
 
   ngOnInit() {
     if (this.viewModel.settings.startTimerOnStartup && this.viewModel.selectedConnection !== null) {
@@ -24,9 +25,12 @@ export class TimersComponent implements OnInit {
   }
 
   public startTimer() {
+    let now = new Date();
+    now.setMilliseconds(0);
+
     let timer : Timer = {
       connection: this.viewModel.selectedConnection,
-      startedAt: new Date(),
+      startedAt: now,
       pausedDuration: 0,
       description: "",
       jiras: [],
@@ -36,13 +40,14 @@ export class TimersComponent implements OnInit {
 
     this.viewModel.timers.push(timer);
     this.viewModel.selectedTimer = timer;
+    this._electronService.ipcRenderer.send("timerState", "running");
   }
 
   private static updateTimers(viewModel : ViewModel, timersComponent : TimersComponent) : void {
     let now = new Date();
 
     // only do the calculations once a second, but run timer more often to produce more accurate counter
-    if (timersComponent.timerUpdatedToSecond === Math.floor(now.getTime() / 1000) || viewModel.timers.length === 0) {
+    if (timersComponent.timerUpdatedToSecond === Math.floor(now.getTime() / 1000)) {
       return;
     }
 
@@ -50,45 +55,11 @@ export class TimersComponent implements OnInit {
       const timer = viewModel.timers[i];
       
       if (timer.pauseStartedAt === null) {
-        timer.currentDuration = this.timeDifferenceToDisplay(now.getTime() - timer.startedAt.getTime(), timer.pausedDuration);
+        timer.currentDuration = TimeSpan.fromTime(now.getTime() - timer.startedAt.getTime() - timer.pausedDuration * 1000).toString();
       }
     }
 
     timersComponent.totalTimeToday = this.getTodaysTotal(viewModel);
-  }
-
-  private static timeDifferenceToDisplay(difference, pausedDuration) {
-    let diff = difference - pausedDuration * 1000;
-
-    let days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    diff -=  days * (1000 * 60 * 60 * 24);
-
-    let hours = Math.floor(diff / (1000 * 60 * 60));
-    diff -= hours * (1000 * 60 * 60);
-
-    let mins = Math.floor(diff / (1000 * 60));
-    diff -= mins * (1000 * 60);
-
-    let seconds = Math.floor(diff / (1000));
-    diff -= seconds * (1000);
-
-    let result = "";
-
-    if (days !== 0) {
-      result += days + ".";
-    }
-
-    if (hours === 0) {
-      result = "00:";
-    }
-    else {
-      result += (hours > 9 ? hours.toString() : "0" + hours.toString()) + ":";
-    }
-
-    result += (mins > 9 ? mins.toString() : "0" + mins.toString()) + ":";
-    result += seconds > 9 ? seconds.toString() : "0" + seconds.toString();
-
-    return result;
   }
 
   private static getTodaysTotal(viewModel : ViewModel) : string {

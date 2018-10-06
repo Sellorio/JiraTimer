@@ -12,7 +12,7 @@ import { ModelConverterService } from '../model-converter.service';
 export class ConnectionsComponent implements OnInit {
   @Input() viewModel : ViewModel;
 
-  constructor(private _electron : ElectronService, private modelConverterService : ModelConverterService) {
+  constructor(private _electronService : ElectronService, private _modelConverterService : ModelConverterService) {
   }
 
   ngOnInit() {
@@ -24,14 +24,18 @@ export class ConnectionsComponent implements OnInit {
     }
 
     this.viewModel.connections.splice(this.viewModel.connections.indexOf(connection), 1);
-    this._electron.ipcRenderer.send("userData", this.modelConverterService.toUserData(this.viewModel));
+    this._electronService.ipcRenderer.send("userData", this._modelConverterService.toUserData(this.viewModel));
   }
 
   public goToNewConnectionTab() : void {
     this.viewModel.selectedConnection = null;
+    console.log("Going to new tab and saving.");
+    this._electronService.ipcRenderer.send("userData", this._modelConverterService.toUserData(this.viewModel));
   }
 
   public selectConnection(connection : Connection) : void {
     this.viewModel.selectedConnection = connection;
+    console.log("Going to existing connection and saving.");
+    this._electronService.ipcRenderer.send("userData", this._modelConverterService.toUserData(this.viewModel));
   }
 }

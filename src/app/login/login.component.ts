@@ -33,7 +33,8 @@ export class LoginComponent implements OnInit {
             icon: null,
             history: [],
             jirasAssignedToMe: null,
-            jirasRecentlyViewed: null
+            jirasRecentlyViewed: null,
+            historyChanged: true
         };
 
         this._jiraService.validateConnection(
