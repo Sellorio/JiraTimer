@@ -12,6 +12,8 @@ import { TimersComponent } from './timers/timers.component';
 import { TimerComponent } from './timer/timer.component';
 import { HistoryComponent } from './history/history.component';
 import { HistoryItemComponent } from './history-item/history-item.component';
+import { SettingsComponent } from './settings/settings.component';
+import { ClickStopPropagationDirective } from './click-stop-propagation.directive';
 
 @NgModule({
   declarations: [
@@ -22,7 +24,9 @@ import { HistoryItemComponent } from './history-item/history-item.component';
     TimersComponent,
     TimerComponent,
     HistoryComponent,
-    HistoryItemComponent
+    HistoryItemComponent,
+    SettingsComponent,
+    ClickStopPropagationDirective
   ],
   imports: [
     BrowserModule,

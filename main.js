@@ -1,5 +1,3 @@
-// package command: electron-packager ./ "Jira Timer" --all --icon "./src/assets/icon.hqx"
-
 const electron = require("electron")
 const fs = require("fs")
 const os = require("os")
@@ -21,11 +19,6 @@ function initialiseUserData() {
 		let encrypted = fs.readFileSync(dataPath).toString();
 		let decrypted = decipher.update(encrypted, "hex", "utf8") + decipher.final("utf8");
 		userData = JSON.parse(decrypted);
-
-		electron.app.setLoginItemSettings({
-			openAtLogin: userData.settings.startOnStartup,
-			path: electron.app.getPath("exe")
-		});
 	}
 	else {
 		userData = {
@@ -177,6 +170,13 @@ ipc.on("userDataRequest", e => {
 });
 
 ipc.on("userData", (e, arg) => {
+	if (arg.settings.startOnStartup !== userData.settings.startOnStartup) {
+		electron.app.setLoginItemSettings({
+			openAtLogin: arg.settings.startOnStartup,
+			path: electron.app.getPath("exe")
+		});
+	}
+
 	userData = arg;
 	saveUserData();
 });

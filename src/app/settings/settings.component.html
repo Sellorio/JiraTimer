@@ -1,0 +1,23 @@
+<button class="settings" (click)="openSettings()" title="Settings">⚙</button>
+<div *ngIf="isVisible === true" class="settings-modal-background" (click)="closeSettings()">
+  <div class="settings-modal" click-stop-propagation>
+    <h1>Settings</h1>
+    <button class="close-settings" (click)="closeSettings()">✖</button>
+    <div class="row">
+      <label>Close to Tray</label>
+      <input type="checkbox" [(ngModel)]="viewModel.settings.keepOpenInTray" (change)="settingsChanged()">
+    </div>
+    <div class="row">
+      <label>Start On Startup</label>
+      <input type="checkbox" [(ngModel)]="viewModel.settings.startOnStartup" (change)="settingsChanged()">
+    </div>
+    <div class="row">
+      <label>Start Timer on Open</label>
+      <input type="checkbox" [(ngModel)]="viewModel.settings.startTimerOnStartup" (change)="settingsChanged()">
+    </div>
+    <div class="row">
+      <label>Open in the Background</label>
+      <input type="checkbox" [(ngModel)]="viewModel.settings.openInBackground" (change)="settingsChanged()">
+    </div>
+  </div>
+</div>

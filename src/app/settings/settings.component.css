@@ -1,0 +1,72 @@
+.settings {
+    position: absolute;
+    top: -6px;
+    right: 0;
+    padding: 0 3px;
+    height: 38px;
+    border: 0;
+    background: none;
+    font-size: 1.9em;
+    color: white;
+    cursor: pointer;
+}
+
+.settings-modal-background {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    padding: 3% 20%;
+    background: rgba(0,0,0,0.3);
+}
+
+.settings-modal {
+    content: "";
+    position: absolute;
+    top: 3%;
+    left: 20%;
+    border-radius: 20px;
+    background: white;
+    width: 60%;
+    height: 94%;
+    padding: 20px;
+}
+
+.settings-modal h1 {
+    margin: 0;
+    font-weight: normal;
+}
+
+.settings-modal p {
+    margin-top: 0;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 50px;
+    font-size: 1.2em;
+}
+
+.row input {
+    width: 15px;
+    height: 15px;
+}
+
+.close-settings {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    border: 0;
+    background: none;
+    font-size: 1.6em;
+    opacity: 0.2;
+    cursor: pointer;
+    transition: opacity .3s;
+}
+
+.close-settings:hover {
+    opacity: 0.6;
+}

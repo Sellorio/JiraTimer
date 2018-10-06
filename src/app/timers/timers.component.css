@@ -20,13 +20,15 @@
 }
 
 .timers li:last-child {
-    text-align: right;
+    display: flex;
+    justify-content: space-between;
 }
 
 .timers li:not([class]) + li:last-child {
     margin-top: -10px;
 }
 
+.submit-all,
 .start-timer {
     margin: 10px;
     padding: 4px 8px;
@@ -36,4 +38,11 @@
     font-size: 1.1em;
     font-weight: 400;
     cursor: pointer;
+}
+
+.submit-all[disabled],
+.start-timer[disabled] {
+    background: #575;
+    color: #7C7;
+    cursor: default;
 }

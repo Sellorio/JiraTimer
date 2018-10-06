@@ -3,6 +3,9 @@ import { ViewModel } from '../model/viewmodel';
 import { Timer } from '../model/timer';
 import { ElectronService } from 'ngx-electron';
 import { TimeSpan } from '../time-span';
+import { TimerComponent } from '../timer/timer.component';
+import { ModelConverterService } from '../model-converter.service';
+import { JiraService } from '../jira.service';
 
 @Component({
   selector: 'app-timers',
@@ -14,7 +17,7 @@ export class TimersComponent implements OnInit {
   totalTimeToday : string = "00:00:00";
   timerUpdatedToSecond : number = 0;
 
-  constructor(private _electronService : ElectronService) { }
+  constructor(private _electronService : ElectronService, private _modelConveterService : ModelConverterService, private _jiraService : JiraService) { }
 
   ngOnInit() {
     if (this.viewModel.settings.startTimerOnStartup && this.viewModel.selectedConnection !== null) {
@@ -41,6 +44,12 @@ export class TimersComponent implements OnInit {
     this.viewModel.timers.push(timer);
     this.viewModel.selectedTimer = timer;
     this._electronService.ipcRenderer.send("timerState", "running");
+  }
+
+  public submitAllTimers() : void {
+    while (this.viewModel.timers.length !== 0) {
+      TimerComponent.submitTimer(this.viewModel, this.viewModel.timers[0], this._electronService, this._modelConveterService, this._jiraService);
+    }
   }
 
   private static updateTimers(viewModel : ViewModel, timersComponent : TimersComponent) : void {

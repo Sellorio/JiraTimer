@@ -138,11 +138,7 @@ export class TimerComponent implements OnInit {
   }
 
   public resumeTimer() : void {
-    if (this.timer.pauseStartedAt !== null) {
-      this.timer.pausedDuration += (Date.now() - this.timer.pauseStartedAt.getTime()) / 1000;
-      this.timer.pauseStartedAt = null;
-      this._electronService.ipcRenderer.send("timerState", "running");
-    }
+    TimerComponent.resumeTimer(this.timer, this._electronService);
   }
 
   public pauseTimer() : void {
@@ -161,49 +157,31 @@ export class TimerComponent implements OnInit {
   }
 
   public submitTimer() : void {
-    this.resumeTimer();
-
-    let now = new Date();
-    now.setMilliseconds(0);
-    let duration = (now.getTime() - this.timer.startedAt.getTime()) / 1000 - this.timer.pausedDuration;
-
-    let history : WorklogHistory = {
-      description: this.timer.description,
-      endedAt: now,
-      isInEditMode: false,
-      pausedDuration: this.timer.pausedDuration,
-      startedAt: this.timer.startedAt,
-      worklogIds: null,
-      jiras: this.timer.jiras
-    };
-
-    this.timer.connection.history.unshift(history);
-    this.timer.connection.history.sort((a, b) => a.startedAt.getTime() - b.startedAt.getTime());
-    this.timer.connection.historyChanged = true;
-    this.stopTimer();
-
-    if (this.timer.jiras.length !== 0) {
-      this._jiraService.submitWorklog(this.timer.connection, this.timer.jiras, this.timer.startedAt, duration, this.timer.description, worklogIds => {
-        history.worklogIds = worklogIds;
-        this._electronService.ipcRenderer.send("userData", this._modelConverterService.toUserData(this.viewModel));
-      });
-    }
-    else {
-      history.worklogIds = [];
-      this._electronService.ipcRenderer.send("userData", this._modelConverterService.toUserData(this.viewModel));
-    }
+    TimerComponent.submitTimer(this.viewModel, this.timer, this._electronService, this._modelConverterService, this._jiraService);
   }
 
   public stopTimer() : void {
-    let timerIndex = this.viewModel.timers.indexOf(this.timer);
+    TimerComponent.stopTimer(this.viewModel, this.timer, this._electronService);
+  }
+
+  public static resumeTimer(timer : Timer, electronService : ElectronService) {
+    if (timer.pauseStartedAt !== null) {
+      timer.pausedDuration += (Date.now() - timer.pauseStartedAt.getTime()) / 1000;
+      timer.pauseStartedAt = null;
+      electronService.ipcRenderer.send("timerState", "running");
+    }
+  }
+
+  public static stopTimer(viewModel : ViewModel, timer : Timer, electronService : ElectronService) {
+    let timerIndex = viewModel.timers.indexOf(timer);
 
     if (timerIndex !== -1) {
-      this.viewModel.timers.splice(timerIndex, 1);
+      viewModel.timers.splice(timerIndex, 1);
 
       let timerState = "stopped";
 
-      for (let i = 0; i < this.viewModel.timers.length; i++) {
-        if (this.viewModel.timers[i].pauseStartedAt === null) {
+      for (let i = 0; i < viewModel.timers.length; i++) {
+        if (viewModel.timers[i].pauseStartedAt === null) {
           return; // timer state is still running
         }
         else {
@@ -211,11 +189,50 @@ export class TimerComponent implements OnInit {
         }
       }
 
-      this._electronService.ipcRenderer.send("timerState", timerState);
+      electronService.ipcRenderer.send("timerState", timerState);
 
-      if (this.viewModel.selectedTimer === this.timer) {
-        this.viewModel.selectedTimer = this.viewModel.timers.length !== 0 ? this.viewModel.timers[0] : null;
+      if (viewModel.selectedTimer === timer) {
+        viewModel.selectedTimer = viewModel.timers.length !== 0 ? viewModel.timers[0] : null;
       }
+    }
+  }
+
+  public static submitTimer(
+      viewModel : ViewModel,
+      timer : Timer,
+      electronService : ElectronService,
+      modelConverterService : ModelConverterService,
+      jiraSerivce : JiraService) {
+    this.resumeTimer(timer, electronService);
+
+    let now = new Date();
+    now.setMilliseconds(0);
+    let duration = (now.getTime() - timer.startedAt.getTime()) / 1000 - timer.pausedDuration;
+
+    let history : WorklogHistory = {
+      description: timer.description,
+      endedAt: now,
+      isInEditMode: false,
+      pausedDuration: timer.pausedDuration,
+      startedAt: timer.startedAt,
+      worklogIds: null,
+      jiras: timer.jiras
+    };
+
+    timer.connection.history.unshift(history);
+    timer.connection.history.sort((a, b) => a.startedAt.getTime() - b.startedAt.getTime());
+    timer.connection.historyChanged = true;
+    this.stopTimer(viewModel, timer, electronService);
+
+    if (timer.jiras.length !== 0) {
+      jiraSerivce.submitWorklog(timer.connection, timer.jiras, timer.startedAt, duration, timer.description, worklogIds => {
+        history.worklogIds = worklogIds;
+        electronService.ipcRenderer.send("userData", modelConverterService.toUserData(viewModel));
+      });
+    }
+    else {
+      history.worklogIds = [];
+      electronService.ipcRenderer.send("userData", modelConverterService.toUserData(viewModel));
     }
   }
 

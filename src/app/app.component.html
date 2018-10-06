@@ -2,7 +2,7 @@
   <app-connections [viewModel]="viewModel"></app-connections>
   <app-login *ngIf="viewModel.selectedConnection === null" [viewModel]="viewModel"></app-login>
   <div *ngIf="viewModel.selectedConnection !== null" style="display:flex">
-    <div style="width:50%;border-right:1px solid #CCC">
+    <div style="width:50%;border-right:1px solid #CCC;height:calc(100vh - 32px);overflow-y:auto">
       <app-timers [viewModel]="viewModel"></app-timers>
       <app-history [viewModel]="viewModel" [connection]="viewModel.selectedConnection"></app-history>
     </div>
@@ -25,4 +25,5 @@
       </app-jira-list>
     </div>
   </div>
+  <app-settings [viewModel]="viewModel"></app-settings>
 </div>

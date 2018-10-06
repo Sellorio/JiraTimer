@@ -3,5 +3,8 @@
   <li *ngFor="let timer of viewModel.timers">
     <app-timer [viewModel]="viewModel" [timer]="timer"></app-timer>
   </li>
-  <li><button class="start-timer" (click)="startTimer()">Start Timer</button></li>
+  <li class="global-timer-controls">
+    <button class="submit-all" (click)="submitAllTimers()" [disabled]="viewModel.timers.length === 0">Submit All</button>
+    <button class="start-timer" (click)="startTimer()">Start Timer</button>
+  </li>
 </ul>

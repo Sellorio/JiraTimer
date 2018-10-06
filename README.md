@@ -1,10 +1,13 @@
-# JiraTimer
+# Jira Timer
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.2.3.
+This is a tool to trac time against jiras by using one or more timers. It features:
 
-## Development server
-
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+- Multiple timers
+- Pausing
+- Multiple jiras per timer
+- Manually entering jira keys (in addition to the provided Assigned To Me and Recently Viewed jira lists)
+- opening a jira in the browser by clicking on it
+- Connections to more than 1 jira instance
 
 ## Code scaffolding
 
@@ -12,16 +15,33 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+`npm run electron-build`
 
-## Running unit tests
+This will build angular and then run Electron in the current directory.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Packaging
 
-## Running end-to-end tests
+Run the following command to create a package for Windows. All platforms are supported. You will need to install the electron-packager package to run this.
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+`electron-packager . --plat="win32"`
 
-## Further help
+Copy the `dist` folder from `resources/app` to the package's root folder. This will allow electron to access the assets contained within. For some reason it doesn't use the
+resources/app directory some times. You can delete everything except for the assets folder from the `dist` folder copy.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+In order to make package sizes resonable, delete the following folders from the `resources/app` folder:
+
+- .vs
+- .vscode
+- e2e
+- node_modules (this is the big one)
+- src
+
+You can also safely delete the following files:
+
+- .editorconfig
+- .gitignore
+- Icon.pdn
+- License
+- readme.md
+- tsconfig.json
+- tslint.json
