@@ -21,7 +21,11 @@ This will build angular and then run Electron in the current directory.
 
 ## Packaging
 
-Below are a set of example commands you can use when packaging the Jira Timer. Linux platforms should also work. You will need to install the electron-packager package to run this.
+You need electron packager installed to package this app:
+
+`electron-packager . --plat="win32" --icon ./src/assets/icon.ico`
+
+Below are a set of example commands you can use when packaging the Jira Timer. Linux platforms should also work.
 
 #### Windows
 
@@ -39,7 +43,6 @@ In order to make package sizes resonable, delete the following folders from the 
 - .vs
 - .vscode
 - e2e
-- node_modules (this is the big one)
 - src
 
 You can also safely delete the following files:

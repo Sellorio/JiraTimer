@@ -71,9 +71,9 @@ export class TimeSpan {
         let magnitude = Math.abs(time);
 
         let days = Math.floor(magnitude / 86400000);
-        time = time % 86400000;
+        magnitude = magnitude % 86400000;
         let hours = Math.floor(magnitude / 3600000);
-        time = time % 3600000;
+        magnitude = magnitude % 3600000;
         let minutes = Math.floor(magnitude / 60000);
         let seconds = Math.floor((magnitude % 60000) / 1000);
         let result = new TimeSpan(isNegative, days, hours, minutes, seconds);
