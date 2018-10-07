@@ -3,6 +3,7 @@ const fs = require("fs")
 const os = require("os")
 const crypto = require("crypto")
 const path = require("path")
+const windowStateKeeper = require('electron-window-state');
 const ipc = electron.ipcMain;
 
 let userData = null;
@@ -52,11 +53,20 @@ function saveUserData() {
 }
 
 function createWindow() {
+	let windowState = windowStateKeeper({
+		defaultWidth: 1400,
+		defaultHeight: 800
+	});
+
 	let window =
 		new electron.BrowserWindow({
-			width: 1400,
-			height: 750,
+			x: windowState.x,
+			y: windowState.y,
+			width: windowState.width,
+			height: windowState.height
 		});
+
+	windowState.manage(window);
 
 	window.webContents.setUserAgent("Mozilla/5.0 (Windows NT 6.3; Win64; x64; AppleWebKit-537.36; Chrome-45.0.2454.85; Electron-0.34.2; Safari-537.36) like Gecko");
 	window.loadFile("dist/index.html");
