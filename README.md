@@ -21,9 +21,15 @@ This will build angular and then run Electron in the current directory.
 
 ## Packaging
 
-Run the following command to create a package for Windows. All platforms are supported. You will need to install the electron-packager package to run this.
+Below are a set of example commands you can use when packaging the Jira Timer. Linux platforms should also work. You will need to install the electron-packager package to run this.
 
-`electron-packager . --plat="win32"`
+#### Windows
+
+`electron-packager . --plat="win32" --icon ./src/assets/icon.ico`
+
+#### MacOS
+
+`electron-packager . --plat="darwin" --icon ./src/assets/icon.hqx`
 
 Copy the `dist` folder from `resources/app` to the package's root folder. This will allow electron to access the assets contained within. For some reason it doesn't use the
 resources/app directory some times. You can delete everything except for the assets folder from the `dist` folder copy.
