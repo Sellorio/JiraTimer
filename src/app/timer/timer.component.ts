@@ -220,7 +220,7 @@ export class TimerComponent implements OnInit {
     };
 
     timer.connection.history.unshift(history);
-    timer.connection.history.sort((a, b) => a.startedAt.getTime() - b.startedAt.getTime());
+    timer.connection.history.sort((a, b) => b.startedAt.getTime() - a.startedAt.getTime());
     timer.connection.historyChanged = true;
     this.stopTimer(viewModel, timer, electronService);
 

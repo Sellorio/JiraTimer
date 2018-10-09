@@ -73,7 +73,7 @@ export class HistoryItemComponent implements OnInit {
           Math.floor(calculatedDurationAsTime / 1000),
           this.item.description);
 
-        this.connection.history.sort((a, b) => a.startedAt.getTime() - b.startedAt.getTime());
+        this.connection.history.sort((a, b) => b.startedAt.getTime() - a.startedAt.getTime());
         this.connection.historyChanged = true;
         this._electronService.ipcRenderer.send("userData", this._modelConverterService.toUserData(this.viewModel));
       }

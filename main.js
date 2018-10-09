@@ -5,6 +5,8 @@ const crypto = require("crypto")
 const path = require("path")
 const windowStateKeeper = require('electron-window-state');
 const ipc = electron.ipcMain;
+const isDev = require('electron-is-dev');
+const applicationPath = isDev ? electron.app.getAppPath() : path.dirname(electron.app.getPath("exe"));
 
 let userData = null;
 let mainWindow = null;
@@ -70,7 +72,7 @@ function createWindow() {
 
 	window.webContents.setUserAgent("Mozilla/5.0 (Windows NT 6.3; Win64; x64; AppleWebKit-537.36; Chrome-45.0.2454.85; Electron-0.34.2; Safari-537.36) like Gecko");
 	window.loadFile("dist/index.html");
-	window.setIcon("dist/assets/icon.jpg");
+	window.setIcon(path.join(applicationPath, "dist/assets/icon.jpg"));
 	
 	window.on("ready-to-show", () => {
 		if (userData.settings.openInBackground === false) {
@@ -96,7 +98,7 @@ function createWindow() {
 }
 
 function createTray() {
-	tray = new electron.Tray("dist/assets/icon-stop.png");
+	tray = new electron.Tray(path.join(applicationPath, "dist/assets/icon-stop.png"));
 	tray.setToolTip("Timer is stopped."); // if timer is active "Keeping track of your time..." else "Timer is stopped."
 
 	let contextMenu = new electron.Menu();
@@ -162,15 +164,15 @@ ipc.on("timerState", (_, state) => {
 	switch (state) {
 		case "running":
 			tray.setToolTip("Keeping track of your time...");
-			tray.setImage("dist/assets/icon-play.png");
+			tray.setImage(path.join(applicationPath, "dist/assets/icon-play.png"));
 			break;
 		case "stopped":
 			tray.setToolTip("Timer is stopped.");
-			tray.setImage("dist/assets/icon-stop.png");
+			tray.setImage(path.join(applicationPath, "dist/assets/icon-stop.png"));
 			break;
 		case "paused":
 			tray.setToolTip("Timer is paused.");
-			tray.setImage("dist/assets/icon-pause.png");
+			tray.setImage(path.join(applicationPath, "dist/assets/icon-pause.png"));
 			break;
 	}
 });
