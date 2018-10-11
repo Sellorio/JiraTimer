@@ -28,22 +28,7 @@ export class TimersComponent implements OnInit {
   }
 
   public startTimer() {
-    let now = new Date();
-    now.setMilliseconds(0);
-
-    let timer : Timer = {
-      connection: this.viewModel.selectedConnection,
-      startedAt: now,
-      pausedDuration: 0,
-      description: "",
-      jiras: [],
-      pauseStartedAt: null,
-      currentDuration: "00:00"
-    };
-
-    this.viewModel.timers.push(timer);
-    this.viewModel.selectedTimer = timer;
-    this._electronService.ipcRenderer.send("timerState", "running");
+    TimerComponent.startTimer(this.viewModel, this._electronService);
   }
 
   public submitAllTimers() : void {

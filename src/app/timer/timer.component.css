@@ -48,7 +48,7 @@
     align-items: center;
     margin-top: 3px;
     margin-left: 3px;
-    padding: 3px;
+    padding: 0 3px 1px 3px;
     border-radius: 4px;
     background: #33F;
     font-weight: 400;
@@ -72,10 +72,11 @@
 
 .jira-key {
     margin: 1px;
-    padding: 2px 4px;
+    padding: 0;
     width: 100px;
     border: 0;
-    background: rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.4);
+    color: white;
 }
 
 .add-jira-key {

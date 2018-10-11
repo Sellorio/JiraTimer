@@ -75,8 +75,14 @@
 .jiras li {
     margin: 6px 3px 0 3px;
     border-radius: 3px;
-    background: rgba(0,0,255,0.3);
+    background: #00F;
     color: white;
+    opacity: 0.3;
+    transition: opacity .3s;
+}
+
+.jiras li:hover {
+    opacity: 0.6;
 }
 
 .jiras li span {

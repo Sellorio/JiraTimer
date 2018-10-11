@@ -234,6 +234,29 @@ export class TimerComponent implements OnInit {
       history.worklogIds = [];
       electronService.ipcRenderer.send("userData", modelConverterService.toUserData(viewModel));
     }
+
+    if (viewModel.timers.length === 0 && viewModel.settings.keepTimerRunning) {
+      TimerComponent.startTimer(viewModel, electronService);
+    }
+  }
+
+  public static startTimer(viewModel : ViewModel, electronService : ElectronService) {
+    let now = new Date();
+    now.setMilliseconds(0);
+
+    let timer : Timer = {
+      connection: viewModel.selectedConnection,
+      startedAt: now,
+      pausedDuration: 0,
+      description: "",
+      jiras: [],
+      pauseStartedAt: null,
+      currentDuration: "00:00"
+    };
+
+    viewModel.timers.push(timer);
+    viewModel.selectedTimer = timer;
+    electronService.ipcRenderer.send("timerState", "running");
   }
 
   public openJiraInBrowser(jira) : void {
