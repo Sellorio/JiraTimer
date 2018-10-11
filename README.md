@@ -43,7 +43,6 @@ In order to make package sizes resonable, delete the following folders from the 
 - .vs
 - .vscode
 - e2e
-- node_modules (this is the big one)
 - src
 
 You can also safely delete the following files:

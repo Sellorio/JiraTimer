@@ -83,9 +83,9 @@ export class ModelConverterService {
             return {
                 jiras: x.jiras,
                 worklogIds: x.worklogIds,
-                startedAt: x.startedAt,
+                startedAt: new Date(x.startedAt),
                 pausedDuration: x.pausedDuration,
-                endedAt: x.endedAt,
+                endedAt: new Date(x.endedAt),
                 description: x.description,
                 isInEditMode: false
             };
@@ -97,9 +97,9 @@ export class ModelConverterService {
             return {
                 jiras: x.jiras,
                 worklogIds: x.worklogIds,
-                startedAt: x.startedAt,
+                startedAt: x.startedAt.toISOString(),
                 pausedDuration: x.pausedDuration,
-                endedAt: x.endedAt,
+                endedAt: x.endedAt.toISOString(),
                 description: x.description
             };
         });
