@@ -189,6 +189,7 @@ export class TimerComponent implements OnInit {
         }
       }
 
+      timer.connection.historyChanged = true;
       electronService.ipcRenderer.send("timerState", timerState);
 
       if (viewModel.selectedTimer === timer) {

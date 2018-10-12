@@ -1,7 +1,12 @@
 <div class="times">
+  <span>Start</span>
   <input type="text" class="started-at" maxlength="9" [(ngModel)]="startedAt" (change)="itemEdited()" [readonly]="item.worklogIds === null">
-  <input type="text" class="duration" maxlength="9" [(ngModel)]="duration" (change)="itemEdited()" [readonly]="item.worklogIds === null">
+  <span>End</span>
   <input type="text" class="ended-at" maxlength="9" [(ngModel)]="endedAt" (change)="itemEdited()" [readonly]="item.worklogIds === null">
+  <span>Paused</span>
+  <input type="text" class="paused-duration" maxlength="9" [(ngModel)]="pausedDuration" (change)="itemEdited()" [readonly]="item.worklogIds === null">
+  <span>Duration</span>
+  <input type="text" class="duration" maxlength="9" [(ngModel)]="duration" (change)="itemEdited()" [readonly]="item.worklogIds === null">
 </div>
 <textarea class="description" rows="1" [(ngModel)]="description" (change)="itemEdited()" [readonly]="item.worklogIds === null"></textarea>
 <ul class="jiras">
