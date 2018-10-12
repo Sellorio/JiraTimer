@@ -38,7 +38,8 @@ export class ModelConverterService {
             openInBackground: this.getSettingOrDefault(settings.openInBackground, false),
             startOnStartup: this.getSettingOrDefault(settings.startOnStartup, false),
             startTimerOnStartup: this.getSettingOrDefault(settings.startTimerOnStartup, false),
-            keepTimerRunning: this.getSettingOrDefault(settings.keepTimerRunning, false)
+            keepTimerRunning: this.getSettingOrDefault(settings.keepTimerRunning, false),
+            disableHistoryItemCollapse: this.getSettingOrDefault(settings.disableHistoryItemCollapse, false)
         };
     }
 

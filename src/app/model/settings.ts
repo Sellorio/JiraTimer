@@ -4,4 +4,5 @@ export class Settings {
     openInBackground : boolean;
     startTimerOnStartup : boolean;
     keepTimerRunning : boolean;
+    disableHistoryItemCollapse : boolean;
 }

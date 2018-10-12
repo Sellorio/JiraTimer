@@ -19,8 +19,10 @@ export class HistoryItemComponent implements OnInit {
 
     description : string;
     startedAt : string;
+    simpleStartedAt : string;
     endedAt : string;
     duration : string;
+    simpleDuration: string;
     pausedDuration : string;
 
     constructor(private _jiraService : JiraService, private _electronService : ElectronService, private _modelConverterService : ModelConverterService) { }
@@ -31,6 +33,9 @@ export class HistoryItemComponent implements OnInit {
         this.endedAt = TimeSpan.fromDate(this.item.endedAt).toString();
         this.duration = TimeSpan.fromTime(this.item.endedAt.getTime() - this.item.startedAt.getTime() - this.item.pausedDuration * 1000).toString();
         this.pausedDuration = TimeSpan.fromTime(this.item.pausedDuration * 1000).toString();
+
+        this.simpleStartedAt = this.startedAt.substr(0, this.startedAt.length - 3);
+        this.simpleDuration = this.duration.substr(0, this.duration.length - 3);
     }
 
     public deleteItem() {
@@ -71,6 +76,9 @@ export class HistoryItemComponent implements OnInit {
                 this.item.pausedDuration = Math.floor(newPausedDuration.toTime() / 1000);
                 this.endedAt = TimeSpan.fromDate(newEndedAt).toString();
                 this.duration = TimeSpan.fromTime(calculatedDurationAsTime).toString();
+
+                this.simpleStartedAt = this.startedAt.substr(0, this.startedAt.length - 3);
+                this.simpleDuration = this.duration.substr(0, this.duration.length - 3);
 
                 this._jiraService.updateWorklog(
                     this.connection,

@@ -38,5 +38,12 @@
       </div>
       <input type="checkbox" [(ngModel)]="viewModel.settings.keepTimerRunning" (change)="settingsChanged()">
     </div>
+    <div class="row">
+      <div class="setting-details">
+        <label>Disable History Item Collapse</label>
+        <div>Disables the collapsing of submitted timings so that you don't have to hover to edit and view details.</div>
+      </div>
+      <input type="checkbox" [(ngModel)]="viewModel.settings.disableHistoryItemCollapse" (change)="settingsChanged()">
+    </div>
   </div>
 </div>

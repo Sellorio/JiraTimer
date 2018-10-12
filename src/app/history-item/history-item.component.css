@@ -1,3 +1,36 @@
+.summary-view {
+    display: flex;
+    align-items: center;
+    padding: 7px;
+}
+
+.detail-view {
+    display: none;
+    padding: 10px;
+}
+
+.history-wrapper:hover .summary-view,
+.history-wrapper.collapse-disabled .summary-view {
+    display: none;
+}
+
+.history-wrapper:hover .detail-view,
+.history-wrapper.collapse-disabled .detail-view {
+    display: block;
+}
+
+.summary-view span {
+    margin-right: 5px;
+    white-space: nowrap;
+}
+
+.summary-view span.description {
+    margin-left: 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
 .times {
     display: flex;
     align-items: center;
@@ -13,7 +46,7 @@
     margin-left: 3px;
     margin-right: 20px;
     padding: 2px 4px;
-    width: 74px;
+    width: 68px;
     border: 1px solid transparent;
     background: none;
     text-align: center;
@@ -22,7 +55,7 @@
     outline: none;
 }
 
-.description {
+textarea.description {
     margin-top: 2px;
     padding: 2px 3px;
     width: 100%;
@@ -71,8 +104,7 @@
 .jiras {
     display: flex;
     flex-wrap: wrap;
-    margin: 0;
-    margin-top: -6px;
+    margin: -6px 0 0 -3px;
     padding: 0;
     list-style: none;
     font-size: 0.85em;
@@ -94,4 +126,9 @@
 .jiras li span {
     padding: 2px 4px;
     cursor: pointer;
+}
+
+.summary-view .jiras {
+    justify-content: flex-end;
+    white-space: nowrap;
 }

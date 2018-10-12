@@ -220,8 +220,13 @@ export class TimerComponent implements OnInit {
       jiras: timer.jiras
     };
 
-    timer.connection.history.unshift(history);
+    timer.connection.history.push(history);
     timer.connection.history.sort((a, b) => a.startedAt.getTime() - b.startedAt.getTime());
+
+    if (timer.connection.history.length > 200) {
+      timer.connection.history.pop();
+    }
+
     timer.connection.historyChanged = true;
     this.stopTimer(viewModel, timer, electronService);
 
