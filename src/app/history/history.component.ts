@@ -35,19 +35,19 @@ export class HistoryComponent implements OnInit {
                 const group = this._groupedHistory[groupIndex];
 
                 if (group.date.toDateString() === today) {
-                    let totalTime = 0;
+                    let totalSeconds = 0;
 
                     for (let historyIndex = 0; historyIndex < group.items.length; historyIndex++) {
                         const history = group.items[historyIndex];
-                        totalTime += history.endedAt.getTime() - history.startedAt.getTime() - history.pausedDuration * 1000;
+                        totalSeconds += Math.floor((history.endedAt.getTime() - history.startedAt.getTime() - history.pausedDuration * 1000) / 1000);
                     }
 
                     for (let timerIndex = 0; timerIndex < this.viewModel.timers.length; timerIndex++) {
                         const timer = this.viewModel.timers[timerIndex];
-                        totalTime += (timer.pauseStartedAt || now).getTime() - timer.startedAt.getTime() - timer.pausedDuration * 1000;
+                        totalSeconds += Math.floor(((timer.pauseStartedAt || now).getTime() - timer.startedAt.getTime() - timer.pausedDuration * 1000) / 1000);
                     }
 
-                    group.totalDuration = TimeSpan.fromTime(totalTime).toString();
+                    group.totalDuration = TimeSpan.fromTime(totalSeconds * 1000).toString();
                     break;
                 }
                 else if (group.date < now) { // forward dating not supported but this will be 1 less thing to change if we do
