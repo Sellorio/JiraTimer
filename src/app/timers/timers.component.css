@@ -7,10 +7,7 @@
 .timers li:last-child {
     display: flex;
     justify-content: space-between;
-}
-
-.timers li:not([class]) + li:last-child {
-    margin-top: -10px;
+    padding: 0 3px;
 }
 
 .timers li:nth-child(2n):not(:last-child) {
@@ -19,7 +16,7 @@
 
 .submit-all,
 .start-timer {
-    margin: 10px;
+    margin: 5px;
     padding: 4px 8px;
     border: 0;
     background: #080;

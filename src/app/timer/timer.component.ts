@@ -206,11 +206,10 @@ export class TimerComponent implements OnInit {
       jiraSerivce : JiraService) {
     this.resumeTimer(timer, electronService);
 
-    let now = new Date();
-    now.setMilliseconds(0);
-    let duration = (now.getTime() - timer.startedAt.getTime()) / 1000 - timer.pausedDuration;
+    const now = new Date();
+    const duration = Math.floor((now.getTime() - timer.startedAt.getTime()) / 1000 - timer.pausedDuration);
 
-    let history : WorklogHistory = {
+    const history : WorklogHistory = {
       description: timer.description,
       endedAt: now,
       isInEditMode: false,
@@ -247,10 +246,9 @@ export class TimerComponent implements OnInit {
   }
 
   public static startTimer(viewModel : ViewModel, electronService : ElectronService) {
-    let now = new Date();
-    now.setMilliseconds(0);
+    const now = new Date();
 
-    let timer : Timer = {
+    const timer : Timer = {
       connection: viewModel.selectedConnection,
       startedAt: now,
       pausedDuration: 0,

@@ -14,7 +14,6 @@ import { JiraService } from '../jira.service';
 })
 export class TimersComponent implements OnInit {
   @Input() viewModel : ViewModel;
-  timerUpdatedToSecond : number = 0;
 
   constructor(private _electronService : ElectronService, private _modelConveterService : ModelConverterService, private _jiraService : JiraService) { }
 
@@ -23,7 +22,7 @@ export class TimersComponent implements OnInit {
       this.startTimer();
     }
 
-    setInterval(() => TimersComponent.updateTimers(this.viewModel, this), 50);
+    setInterval(() => TimersComponent.updateTimers(this.viewModel), 50);
   }
 
   public startTimer() {
@@ -36,19 +35,16 @@ export class TimersComponent implements OnInit {
     }
   }
 
-  private static updateTimers(viewModel : ViewModel, timersComponent : TimersComponent) : void {
+  private static updateTimers(viewModel : ViewModel) : void {
     let now = new Date();
-
-    // only do the calculations once a second, but run timer more often to produce more accurate counter
-    if (timersComponent.timerUpdatedToSecond === Math.floor(now.getTime() / 1000)) {
-      return;
-    }
 
     for (let i = 0; i < viewModel.timers.length; i++) {
       const timer = viewModel.timers[i];
       
       if (timer.pauseStartedAt === null) {
-        timer.currentDuration = TimeSpan.fromTime(now.getTime() - timer.startedAt.getTime() - timer.pausedDuration * 1000).toString();
+        const time = now.getTime() - timer.startedAt.getTime() - timer.pausedDuration * 1000;
+        console.log(time);
+        timer.currentDuration = TimeSpan.fromTime(time).toString();
       }
     }
   }
