@@ -4,33 +4,19 @@
     list-style: none;
 }
 
-.total-today {
-    padding: 4px 6px;
-    width: 100%;
-    background: #666;
-    text-align: center;
-    font-weight: 400;
-    color: white;
-}
-
-.total-today:before {
-    content: "today: ";
-    font-weight: 400;
-    opacity: 0.4;
-}
-
 .timers li:last-child {
     display: flex;
     justify-content: space-between;
+    padding: 0 3px;
 }
 
-.timers li:not([class]) + li:last-child {
-    margin-top: -10px;
+.timers li:nth-child(2n):not(:last-child) {
+    background: rgba(0,0,0,0.03);
 }
 
 .submit-all,
 .start-timer {
-    margin: 10px;
+    margin: 5px;
     padding: 4px 8px;
     border: 0;
     background: #080;

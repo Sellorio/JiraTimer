@@ -189,6 +189,7 @@ export class TimerComponent implements OnInit {
         }
       }
 
+      timer.connection.historyChanged = true;
       electronService.ipcRenderer.send("timerState", timerState);
 
       if (viewModel.selectedTimer === timer) {
@@ -205,11 +206,10 @@ export class TimerComponent implements OnInit {
       jiraSerivce : JiraService) {
     this.resumeTimer(timer, electronService);
 
-    let now = new Date();
-    now.setMilliseconds(0);
-    let duration = (now.getTime() - timer.startedAt.getTime()) / 1000 - timer.pausedDuration;
+    const now = new Date();
+    const duration = Math.floor((now.getTime() - timer.startedAt.getTime()) / 1000 - timer.pausedDuration);
 
-    let history : WorklogHistory = {
+    const history : WorklogHistory = {
       description: timer.description,
       endedAt: now,
       isInEditMode: false,
@@ -219,8 +219,13 @@ export class TimerComponent implements OnInit {
       jiras: timer.jiras
     };
 
-    timer.connection.history.unshift(history);
+    timer.connection.history.push(history);
     timer.connection.history.sort((a, b) => b.startedAt.getTime() - a.startedAt.getTime());
+
+    if (timer.connection.history.length > 200) {
+      timer.connection.history.pop();
+    }
+
     timer.connection.historyChanged = true;
     this.stopTimer(viewModel, timer, electronService);
 
@@ -234,6 +239,28 @@ export class TimerComponent implements OnInit {
       history.worklogIds = [];
       electronService.ipcRenderer.send("userData", modelConverterService.toUserData(viewModel));
     }
+
+    if (viewModel.timers.length === 0 && viewModel.settings.keepTimerRunning) {
+      TimerComponent.startTimer(viewModel, electronService);
+    }
+  }
+
+  public static startTimer(viewModel : ViewModel, electronService : ElectronService) {
+    const now = new Date();
+
+    const timer : Timer = {
+      connection: viewModel.selectedConnection,
+      startedAt: now,
+      pausedDuration: 0,
+      description: "",
+      jiras: [],
+      pauseStartedAt: null,
+      currentDuration: "00:00"
+    };
+
+    viewModel.timers.push(timer);
+    viewModel.selectedTimer = timer;
+    electronService.ipcRenderer.send("timerState", "running");
   }
 
   public openJiraInBrowser(jira) : void {

@@ -17,19 +17,10 @@ if (environment.production) {
 platformBrowserDynamic().bootstrapModule(AppModule)
   .catch(err => console.error(err));
 
+// runs auto sizing on description field for timers. Fields need to be set up (set up is run in javascript in timer component)
 $(document)
-  .one('focus.autoExpand', 'textarea.autoExpand', (event) => {
+  .on('input.autoExpand', 'textarea.autoExpand', function(){
     let target : any = event.target;
-    let savedValue = target.value;
-
-    target.value = '';
-    target.baseScrollHeight = target.scrollHeight;
-    target.value = savedValue;
-  })
-  .on('input.autoExpand', 'textarea.autoExpand', (event) => {
-    let target : any = event.target;
-    let minRows = target.getAttribute('data-min-rows')|0, rows;
-    target.rows = minRows;
-    rows = Math.ceil((target.scrollHeight - target.baseScrollHeight) / 33);
-    target.rows = rows + minRows;
+    target.style.height = "0px";
+    target.style.height = target.scrollHeight + 2 + "px";
   });

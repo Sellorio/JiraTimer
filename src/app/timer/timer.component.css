@@ -1,10 +1,9 @@
 .timer {
     display: flex;
-    margin-left: 10px;
-    margin-right: 10px;
-    border-top: 1px solid #DDD;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    margin-left: 8px;
+    margin-right: 8px;
+    padding-top: 6px;
+    padding-bottom: 6px;
     font-size: 1.3em;
 }
 
@@ -21,6 +20,7 @@
 .times input {
     padding: 2px 4px;
     border: 1px solid #ABF;
+    background: none;
     font-size: 1em;
 }
 
@@ -29,7 +29,9 @@
     width: 100%;
     padding: 2px 3px;
     border: 1px solid #ABF;
-    font-size: 1.2em;
+    background: none;
+    font-size: 1em;
+    resize: none;
 }
 
 .jiras-in-timer {
@@ -46,9 +48,9 @@
 .jiras-in-timer li {
     display: flex;
     align-items: center;
-    margin-top: 3px;
+    margin-top: 4px;
     margin-left: 3px;
-    padding: 3px;
+    padding: 1px 3px;
     border-radius: 4px;
     background: #33F;
     font-weight: 400;
@@ -72,13 +74,15 @@
 
 .jira-key {
     margin: 1px;
-    padding: 2px 4px;
+    padding: 0;
     width: 100px;
     border: 0;
-    background: rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.4);
+    color: white;
 }
 
 .add-jira-key {
+    margin-bottom: -1px;
     font-size: 1.2em;
 }
 

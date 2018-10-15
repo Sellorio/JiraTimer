@@ -33,7 +33,14 @@ export class ModelConverterService {
     }
 
     private settingsToModel(settings : any) : Settings {
-        return settings;
+        return {
+            keepOpenInTray: this.getSettingOrDefault(settings.keepOpenInTray, true),
+            openInBackground: this.getSettingOrDefault(settings.openInBackground, false),
+            startOnStartup: this.getSettingOrDefault(settings.startOnStartup, false),
+            startTimerOnStartup: this.getSettingOrDefault(settings.startTimerOnStartup, false),
+            keepTimerRunning: this.getSettingOrDefault(settings.keepTimerRunning, false),
+            disableHistoryItemCollapse: this.getSettingOrDefault(settings.disableHistoryItemCollapse, false)
+        };
     }
 
     private settingsToData(settings : Settings) : any {
@@ -97,5 +104,9 @@ export class ModelConverterService {
                 description: x.description
             };
         });
+    }
+
+    private getSettingOrDefault(settingValue, defaultValue) : any {
+        return typeof settingValue === "undefined" ? defaultValue : settingValue;
     }
 }

@@ -20,12 +20,11 @@
 
 .history-list > li {
     position: relative;
-    padding: 10px;
     background: #EAFFEA;
 }
 
 .history-list > li:nth-child(2n + 1) {
-    background: #EAFAFF;
+    background: rgb(245, 253, 255);
 }
 
 .history-list > li.inserting {

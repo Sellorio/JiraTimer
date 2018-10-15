@@ -46,8 +46,20 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 10px 50px;
+    margin: 10px 20px;
     font-size: 1.2em;
+}
+
+.setting-details {
+    margin-right: 10%;
+}
+
+.setting-details label {
+    font-weight: bold;
+}
+
+.setting-details div {
+    font-size: 0.8em;
 }
 
 .row input {

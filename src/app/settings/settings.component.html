@@ -4,20 +4,46 @@
     <h1>Settings</h1>
     <button class="close-settings" (click)="closeSettings()">✖</button>
     <div class="row">
-      <label>Close to Tray</label>
+        <div class="setting-details">
+          <label>Close to Tray</label>
+          <div>If enabled, when the window is closed, Jira Timer stays open in the background.</div>
+        </div>
       <input type="checkbox" [(ngModel)]="viewModel.settings.keepOpenInTray" (change)="settingsChanged()">
     </div>
     <div class="row">
-      <label>Start On Startup</label>
+        <div class="setting-details">
+          <label>Start On Startup</label>
+          <div>Whether or not to start Jira Timer when the computer starts up.</div>
+        </div>
       <input type="checkbox" [(ngModel)]="viewModel.settings.startOnStartup" (change)="settingsChanged()">
     </div>
     <div class="row">
-      <label>Start Timer on Open</label>
+        <div class="setting-details">
+          <label>Start Timer on Open</label>
+          <div>Whether or not to start a timer up as soon as Jira Timer is opened.</div>
+        </div>
       <input type="checkbox" [(ngModel)]="viewModel.settings.startTimerOnStartup" (change)="settingsChanged()">
     </div>
     <div class="row">
-      <label>Open in the Background</label>
+        <div class="setting-details">
+          <label>Open in the Background</label>
+          <div>Whether or not the window should be initially hidden when starting the Jira Timer.</div>
+        </div>
       <input type="checkbox" [(ngModel)]="viewModel.settings.openInBackground" (change)="settingsChanged()">
+    </div>
+    <div class="row">
+      <div class="setting-details">
+        <label>Keep Timer Running</label>
+        <div>Whether or not to automatically start a new timer when the last running timer is submitted.</div>
+      </div>
+      <input type="checkbox" [(ngModel)]="viewModel.settings.keepTimerRunning" (change)="settingsChanged()">
+    </div>
+    <div class="row">
+      <div class="setting-details">
+        <label>Disable History Item Collapse</label>
+        <div>Disables the collapsing of submitted timings so that you don't have to hover to edit and view details.</div>
+      </div>
+      <input type="checkbox" [(ngModel)]="viewModel.settings.disableHistoryItemCollapse" (change)="settingsChanged()">
     </div>
   </div>
 </div>

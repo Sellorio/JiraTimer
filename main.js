@@ -25,12 +25,7 @@ function initialiseUserData() {
 	}
 	else {
 		userData = {
-			settings: {
-				startOnStartup : false,
-				keepOpenInTray: true,
-				openInBackground: false,
-				startTimerOnStartup: false,
-			},
+			settings: {}, // defaults are handled in ModelConverterService
 			selectedConnection: -1, // index of selected connection
 			connections: [] // { hostname, icon, username, password, history }
 				// history : { worklogIds, jiras, startedAt, pausedDuration, endedAt, description }
@@ -72,7 +67,7 @@ function createWindow() {
 
 	window.webContents.setUserAgent("Mozilla/5.0 (Windows NT 6.3; Win64; x64; AppleWebKit-537.36; Chrome-45.0.2454.85; Electron-0.34.2; Safari-537.36) like Gecko");
 	window.loadFile("dist/index.html");
-	window.setIcon(path.join(applicationPath, "dist/assets/icon.jpg"));
+	window.setIcon(path.join(applicationPath, "dist/assets/icon.ico"));
 	
 	window.on("ready-to-show", () => {
 		if (userData.settings.openInBackground === false) {
