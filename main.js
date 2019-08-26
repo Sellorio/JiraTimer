@@ -16,7 +16,7 @@ let isTimerRunning = false;
 
 function initialiseUserData() {
 	let dataPath = path.join(electron.app.getPath("appData"), "JiraTimer", "userdata"); // do i need to put app name in user data file name?
-	
+
 	if (fs.existsSync(dataPath)) {
 		let decipher = crypto.createDecipher("aes-256-ctr", "c187a809b");
 		let encrypted = fs.readFileSync(dataPath).toString();
@@ -37,13 +37,12 @@ function initialiseUserData() {
 
 function saveUserData() {
 	let dataPath = path.join(electron.app.getPath("appData"), "JiraTimer", "userdata"); // do i need to put app name in user data file name?
-	console.log("User data path: " + dataPath);
 	let decrypted = JSON.stringify(userData);
 	let cipher = crypto.createCipher("aes-256-ctr", "c187a809b");
 	let encrypted = cipher.update(decrypted, "utf8", "hex") + cipher.final("hex");
 
 	if (!fs.existsSync(path.dirname(dataPath))) {
-		fs.mkdirSync(path.dirname(dataPath)); 
+		fs.mkdirSync(path.dirname(dataPath));
 	}
 
 	fs.writeFile(dataPath, encrypted, () => {}); // callback required but we don't have any use for it
@@ -68,7 +67,7 @@ function createWindow() {
 	window.webContents.setUserAgent("Mozilla/5.0 (Windows NT 6.3; Win64; x64; AppleWebKit-537.36; Chrome-45.0.2454.85; Electron-0.34.2; Safari-537.36) like Gecko");
 	window.loadFile("dist/index.html");
 	window.setIcon(path.join(applicationPath, "dist/assets/icon.ico"));
-	
+
 	window.on("ready-to-show", () => {
 		if (userData.settings.openInBackground === false) {
 			mainWindow.show();
@@ -76,7 +75,7 @@ function createWindow() {
 	});
 	window.on("close", e => {
 		e.preventDefault();
-		
+
 		if (os.platform() === "darwin") {
 			mainWindow.hide();
 			tray.destroy();
@@ -107,7 +106,7 @@ function createTray() {
 		click: handleCloseRequest
 	}));
 	tray.setContextMenu(contextMenu);
-	
+
 	tray.on("click", () => mainWindow.show());
 }
 
@@ -149,7 +148,7 @@ electron.app.on("activate", () => {
 electron.app.on('before-quit', () => {
 	mainWindow.show();
 	mainWindow.destroy();
-	
+
 	if (tray !== null) {
 		tray.destroy();
 	}

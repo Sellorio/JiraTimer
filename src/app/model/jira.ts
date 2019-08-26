@@ -1,4 +1,4 @@
 export class Jira {
-    key : string;
-    summary : string;
+  key: string;
+  summary: string;
 }

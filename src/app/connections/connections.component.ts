@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectorRef, ApplicationRef, ChangeDetectionStrategy } from '@angular/core';
 import { ViewModel } from '../model/viewmodel';
 import { Connection } from '../model/connection';
 import { ElectronService } from 'ngx-electron';
@@ -7,35 +7,35 @@ import { ModelConverterService } from '../model-converter.service';
 @Component({
   selector: 'app-connections',
   templateUrl: './connections.component.html',
-  styleUrls: ['./connections.component.css']
+  styleUrls: ['./connections.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Default
 })
-export class ConnectionsComponent implements OnInit {
-  @Input() viewModel : ViewModel;
+export class ConnectionsComponent {
+  @Input() viewModel: ViewModel;
 
-  constructor(private _electronService : ElectronService, private _modelConverterService : ModelConverterService) {
-  }
+  constructor(
+    private readonly electronService: ElectronService,
+    private readonly modelConverterService: ModelConverterService,
+    private readonly applicationRef: ApplicationRef) {}
 
-  ngOnInit() {
-  }
-
-  public deleteConnection(connection : Connection) : void {
+  public deleteConnection(connection: Connection): void {
     if (this.viewModel.selectedConnection === connection) {
       this.viewModel.selectedConnection = null;
     }
 
     this.viewModel.connections.splice(this.viewModel.connections.indexOf(connection), 1);
-    this._electronService.ipcRenderer.send("userData", this._modelConverterService.toUserData(this.viewModel));
+    this.electronService.ipcRenderer.send('userData', this.modelConverterService.toUserData(this.viewModel));
   }
 
-  public goToNewConnectionTab() : void {
+  public goToNewConnectionTab(): void {
     this.viewModel.selectedConnection = null;
-    console.log("Going to new tab and saving.");
-    this._electronService.ipcRenderer.send("userData", this._modelConverterService.toUserData(this.viewModel));
+    this.applicationRef.tick();
+    this.electronService.ipcRenderer.send('userData', this.modelConverterService.toUserData(this.viewModel));
   }
 
-  public selectConnection(connection : Connection) : void {
+  public selectConnection(connection: Connection): void {
     this.viewModel.selectedConnection = connection;
-    console.log("Going to existing connection and saving.");
-    this._electronService.ipcRenderer.send("userData", this._modelConverterService.toUserData(this.viewModel));
+    this.applicationRef.tick();
+    this.electronService.ipcRenderer.send('userData', this.modelConverterService.toUserData(this.viewModel));
   }
 }

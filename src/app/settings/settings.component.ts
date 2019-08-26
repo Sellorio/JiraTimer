@@ -6,26 +6,25 @@ import { ViewModel } from '../model/viewmodel';
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.css']
+  styleUrls: ['./settings.component.scss']
 })
-export class SettingsComponent implements OnInit {
-  @Input() viewModel : ViewModel;
-  isVisible : boolean = false;
+export class SettingsComponent {
+  @Input() viewModel: ViewModel;
+  isVisible = false;
 
-  constructor(private _electronService : ElectronService, private _modelConverterService : ModelConverterService) { }
+  constructor(
+    private readonly electronService: ElectronService,
+    private readonly modelConverterService: ModelConverterService) {}
 
-  ngOnInit() {
-  }
-
-  public openSettings() : void {
+  public openSettings(): void {
     this.isVisible = true;
   }
 
-  public settingsChanged() : void {
-    this._electronService.ipcRenderer.send("userData", this._modelConverterService.toUserData(this.viewModel));
+  public settingsChanged(): void {
+    this.electronService.ipcRenderer.send('userData', this.modelConverterService.toUserData(this.viewModel));
   }
 
-  public closeSettings() : void {
+  public closeSettings(): void {
     this.isVisible = false;
   }
 }
