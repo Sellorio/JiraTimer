@@ -13,7 +13,7 @@ import { Jira } from '../model/jira';
     templateUrl: './history-item.component.html',
     styleUrls: ['./history-item.component.scss']
 })
-export class HistoryItemComponent {
+export class HistoryItemComponent implements OnInit {
     @Input() viewModel: ViewModel;
     @Input() connection: Connection;
     @Input() item: WorklogHistory;
@@ -30,17 +30,18 @@ export class HistoryItemComponent {
         private readonly jiraService: JiraService,
         private readonly electronService: ElectronService,
         private readonly modelConverterService: ModelConverterService,
-        private readonly applicationRef: ApplicationRef) {
+        private readonly applicationRef: ApplicationRef) {}
 
-      this.description = this.item.description;
-      this.startedAt = TimeSpan.fromDate(this.item.startedAt).toString();
-      this.endedAt = TimeSpan.fromDate(this.item.endedAt).toString();
-      this.duration =
-        TimeSpan.fromTime(this.item.endedAt.getTime() - this.item.startedAt.getTime() - this.item.pausedDuration * 1000).toString();
-      this.pausedDuration = TimeSpan.fromTime(this.item.pausedDuration * 1000).toString();
+    public ngOnInit(): void {
+        this.description = this.item.description;
+        this.startedAt = TimeSpan.fromDate(this.item.startedAt).toString();
+        this.endedAt = TimeSpan.fromDate(this.item.endedAt).toString();
+        this.duration =
+            TimeSpan.fromTime(this.item.endedAt.getTime() - this.item.startedAt.getTime() - this.item.pausedDuration * 1000).toString();
+        this.pausedDuration = TimeSpan.fromTime(this.item.pausedDuration * 1000).toString();
 
-      this.simpleStartedAt = this.startedAt.substr(0, this.startedAt.length - 3);
-      this.simpleDuration = this.duration.substr(0, this.duration.length - 3);
+        this.simpleStartedAt = this.startedAt.substr(0, this.startedAt.length - 3);
+        this.simpleDuration = this.duration.substr(0, this.duration.length - 3);
     }
 
     public deleteItem() {
