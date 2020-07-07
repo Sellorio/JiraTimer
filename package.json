@@ -51,7 +51,7 @@
     "ts-node": "~7.0.0",
     "tslint": "~5.15.0",
     "typescript": "~3.5.3",
-    "electron": "^3.0.2",
+    "electron": "^7.2.4",
     "electron-packager": "14.0.4",
     "@types/jquery": "^3.3.11"
   }
